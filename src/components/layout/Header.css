@@ -1,0 +1,17 @@
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px 10px;
+  background-color: white;
+  color: #1f72c5;
+}
+  
+.logo h1 {
+  margin: 5px 0 0 0;
+  font-size: 24px;
+  color: #1f72c5;
+  margin-right: 30px;
+  flex-shrink: 0;
+  transform: translateX(50px);
+}
