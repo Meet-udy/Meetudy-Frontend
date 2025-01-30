@@ -1,0 +1,34 @@
+.nav-menu {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-start;
+  gap: 30px;
+  padding-left: 170px;
+  margin-top: 5px;
+}
+
+.nav-menu ul {
+  list-style: none;
+  display: flex;
+  gap: 150px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.nav-menu li {
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-menu li::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #1f72c5;
+  bottom: -5px;
+  left: 0;
+}
