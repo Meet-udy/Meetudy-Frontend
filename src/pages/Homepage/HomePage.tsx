@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Layout } from "../components/layout/Header.tsx";
-import { SearchBar } from "../components/bar/SearchBar.tsx";
-import { SearchButton } from "../components/button/SearchButton.tsx";
-import { NavBar } from "../components/layout/NavBar.tsx";
-import { UserMenu } from "../components/layout/UserMenu.tsx";
-import "../components/bar/SearchBar.css";
-import "../components/button/SearchButton.css";
-import "../components/layout/Header.css";
-import "../components/layout/NavBar.css";
-import "../components/layout/UserMenu.css";
+import { Layout } from "../../components/layout/Header/Header.tsx";
+import { SearchBar } from "../../components/bar/SearchBar/SearchBar.tsx";
+import { SearchButton } from "../../components/button/SearchButton/SearchButton.tsx";
+import { NavBar } from "../../components/layout/NavBar/NavBar.tsx";
+import { UserMenu } from "../../components/layout/UserMenu/UserMenu.tsx";
+import "../../components/bar/SearchBar/SearchBar.css";
+import "../../components/button/SearchButton/SearchButton.css";
+import '../../components/layout/Header/Header.css';
+import "../../components/layout/NavBar/NavBar.css";
+import "../../components/layout/UserMenu/UserMenu.css";
 import "./HomePage.css";
 
 export const HomePage: React.FC = () => {

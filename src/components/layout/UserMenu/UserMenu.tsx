@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";  
 import "./UserMenu.css";
 
 export const UserMenu: React.FC = () => {
@@ -15,7 +16,9 @@ export const UserMenu: React.FC = () => {
         <div className="dropdown-menu">
           <ul>
             <li>회원가입</li>
-            <li>로그인</li>
+            <li>
+              <Link to="/login">로그인</Link> 
+            </li>
             <li>로그아웃</li>
           </ul>
         </div>
