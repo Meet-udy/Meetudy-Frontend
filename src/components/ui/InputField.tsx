@@ -1,5 +1,5 @@
 import React from "react";
-import "./LoginField.css";
+import "./InputField.css";
 
 interface LoginFieldProps {
   type: "text" | "password" | "email";
