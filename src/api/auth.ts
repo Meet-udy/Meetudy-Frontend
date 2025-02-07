@@ -34,3 +34,23 @@ export const signIn = async (signInDto: SignInDto): Promise<ApiResponse<JwtToken
     throw new Error("네트워크 오류가 발생했습니다.");
   }
 };
+
+export const logout = async (accessToken: string): Promise<void> => {
+  try {
+    await axios.post(
+      `${API_BASE_URL}/members/logout`, 
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    console.log("로그아웃 성공!");
+  } catch (error) {
+    console.error("로그아웃 중 오류가 발생했습니다.", error);
+  }
+};
