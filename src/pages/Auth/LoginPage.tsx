@@ -6,6 +6,9 @@ import InputField from "../../components/ui/InputField.tsx";
 import SignupButton from "../../components/auth/SignupButton.tsx";
 import "./LoginPage.css";
 
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
+
+
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -41,7 +44,11 @@ const LoginPage: React.FC = () => {
       setErrors({ general: "서버와의 통신 중 오류가 발생했습니다." });
     }
   };
-  
+
+  const handleKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
+
   return (
     <div className="login-page-container">
       <h1 className="login-title">MEETUDY</h1>
@@ -82,7 +89,7 @@ const LoginPage: React.FC = () => {
       <div className="line-with-text">간편 로그인 / 회원가입</div>
       <div className="login-buttons-container">
         <div className="kakao-login-container">
-          <KakaoLoginButton onClick={() => alert("카카오 로그인")} />
+          <KakaoLoginButton onClick={handleKakaoLogin} />
         </div>
         <SignupButton text="회원가입" onClick={() => alert("회원가입 클릭")} />
       </div>

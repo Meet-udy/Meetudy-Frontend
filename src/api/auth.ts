@@ -12,6 +12,11 @@ export interface JwtTokenDto {
   refreshToken: string;
 }
 
+export interface KakaoLoginDto {
+  jwtTokenDto: JwtTokenDto;
+  isFirstLogin: boolean;
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   code: string;
@@ -32,6 +37,17 @@ export const signIn = async (signInDto: SignInDto): Promise<ApiResponse<JwtToken
       return error.response.data;  
     }
     throw new Error("네트워크 오류가 발생했습니다.");
+  }
+};
+
+export const kakaoLogin = async (code: string): Promise<ApiResponse<KakaoLoginDto>> => {
+  try {
+    const response = await axios.post<ApiResponse<KakaoLoginDto>>(
+      `${API_BASE_URL}/members/kakao/login?code=${code}`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("카카오 로그인 중 오류 발생");
   }
 };
 
