@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { signIn } from "../../api/auth.ts";
 import LoginButton from "../../components/auth/LoginButton.tsx";
 import KakaoLoginButton from "../../components/auth/KakaoLoginButton.tsx";  
 import InputField from "../../components/ui/InputField.tsx";  
-import SignupButton from "../../components/auth/SignupButton.tsx";
+import SignupButton from "../../components/auth/SignUpButton.tsx";
 import "./LoginPage.css";
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
@@ -87,13 +88,17 @@ const LoginPage: React.FC = () => {
       </div>
 
       <div className="line-with-text">간편 로그인 / 회원가입</div>
-      <div className="login-buttons-container">
-        <div className="kakao-login-container">
-          <KakaoLoginButton onClick={handleKakaoLogin} />
+        <div className="login-buttons-container">
+          <div className="kakao-login-container">
+            <KakaoLoginButton onClick={handleKakaoLogin} />
+          </div>
+          <div className="signup-container">
+            <Link to="/signup">
+              <SignupButton text="회원가입" />
+            </Link>
+          </div>
         </div>
-        <SignupButton text="회원가입" onClick={() => alert("회원가입 클릭")} />
       </div>
-    </div>
   );
 };
 
