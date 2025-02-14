@@ -65,7 +65,7 @@
 
 .signup-container {
   text-align: center;
-  margin-top: 15px;
+  margin-top: -30px; 
 }
 
 .kakao-login-container {
@@ -73,9 +73,9 @@
   align-items: center;  
   gap: 10px;
   margin-right: 10px;
-  margin-left: 2px;
+  margin-left: 150px;
+  margin-top: -20px;
 }
-
 
 .login-button-container {
   margin-top: 10px;  
