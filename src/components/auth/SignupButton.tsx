@@ -1,12 +1,12 @@
 import React from "react";
-import "./SignupButton.css";
+import "./SignUpButton.css";
 
-interface SignupButtonProps {
+interface SignUpButtonProps {
   onClick: () => void;
   text: string;
 }
 
-const SignupButton: React.FC<SignupButtonProps> = ({ onClick, text }) => {
+const SignUpButton: React.FC<SignUpButtonProps> = ({ onClick, text }) => {
   return (
     <button className="signup-button" onClick={onClick}>
       {text}
@@ -14,4 +14,4 @@ const SignupButton: React.FC<SignupButtonProps> = ({ onClick, text }) => {
   );
 };
 
-export default SignupButton;
+export default SignUpButton;
