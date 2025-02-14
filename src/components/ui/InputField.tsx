@@ -1,23 +1,25 @@
 import React from "react";
 import "./InputField.css";
 
-interface LoginFieldProps {
+interface InputFieldProps {
+  name: string;
   type: "text" | "password" | "email";
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const LoginField: React.FC<LoginFieldProps> = ({ type, placeholder, value, onChange }) => {
+const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, value, onChange }) => {
   return (
     <input
+      name={name}
       type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className="login-field"
+      className="input-field"
     />
   );
 };
 
-export default LoginField;
+export default InputField;
