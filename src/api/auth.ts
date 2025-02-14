@@ -2,6 +2,19 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8080"; 
 
+export interface SignUpDto {
+  email: string;
+  username: string;
+  password: string;
+  nickname: string;
+  major: string;
+  introduction?: string;
+  isOnline: boolean;
+  notificationEnabled: boolean;
+  location: string;
+  studyCategories: string[];
+}
+
 export interface SignInDto {
   username: string;
   password: string;
@@ -23,6 +36,15 @@ export interface ApiResponse<T> {
   message: string;
   result?: T;
 }
+
+export const signUp = async (signUpDto: SignUpDto) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/members/sign-up`, signUpDto);
+    return response.data;
+  } catch (error) {
+    throw new Error("회원가입 중 오류가 발생했습니다.");
+  }
+};
 
 export const signIn = async (signInDto: SignInDto): Promise<ApiResponse<JwtTokenDto>> => {
   try {
@@ -65,7 +87,6 @@ export const logout = async (accessToken: string): Promise<void> => {
     
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    console.log("로그아웃 성공!");
   } catch (error) {
     console.error("로그아웃 중 오류가 발생했습니다.", error);
   }
