@@ -28,7 +28,9 @@ export const UserMenu: React.FC = () => {
       {menuVisible && (
         <div className="dropdown-menu">
           <ul>
-            <li>회원가입</li>
+            <li>
+            <Link to="/signup">회원가입</Link>
+            </li>
             <li>
               <Link to="/login">로그인</Link>
             </li>
