@@ -91,3 +91,27 @@ export const logout = async (accessToken: string): Promise<void> => {
     console.error("로그아웃 중 오류가 발생했습니다.", error);
   }
 };
+
+export const findUsername = async (email: string): Promise<ApiResponse<string>> => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(`${API_BASE_URL}/members/username`, { email });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      return error.response.data;
+    }
+    throw new Error("아이디 찾기 중 오류 발생");
+  }
+};
+
+export const findPassword = async (username: string, email: string): Promise<ApiResponse<string>> => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(`${API_BASE_URL}/members/password`, { username, email });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      return error.response.data;
+    }
+    throw new Error("비밀번호 찾기 중 오류 발생");
+  }
+};

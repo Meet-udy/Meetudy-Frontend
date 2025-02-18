@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { signIn } from "../../api/auth.ts";
 import LoginButton from "../../components/auth/LoginButton.tsx";
@@ -11,6 +12,7 @@ const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${proc
 
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ username?: string; password?: string; general?: string }>({});
@@ -33,7 +35,6 @@ const LoginPage: React.FC = () => {
         setErrors({ general: "로그인에 실패했습니다." });
       } else {
         if (response.result) {
-          console.log("로그인 성공!", response.result);
           localStorage.setItem("accessToken", response.result.accessToken);
           localStorage.setItem("refreshToken", response.result.refreshToken);
           window.location.href = "/";
@@ -48,6 +49,14 @@ const LoginPage: React.FC = () => {
 
   const handleKakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
+  };
+
+  const handleFindUsername = () => {
+    navigate("/find-account"); 
+  };
+
+  const handleFindPassword = () => {
+    navigate("/find-account"); 
   };
 
   return (
@@ -75,9 +84,9 @@ const LoginPage: React.FC = () => {
         {errors.password && <p className="error-message">{errors.password}</p>}
 
         <div className="login-links">
-          <a href="#">아이디 찾기</a>
+          <a href="#" onClick={handleFindUsername}>아이디 찾기</a>
           <span>/</span>
-          <a href="#">비밀번호 찾기</a>
+          <a href="#" onClick={handleFindPassword}>비밀번호 찾기</a>
         </div>
 
         <div className="login-button-container">
