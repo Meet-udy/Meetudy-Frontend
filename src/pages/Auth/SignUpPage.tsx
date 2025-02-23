@@ -1,112 +1,36 @@
 import React, { useState } from "react";
 import InputField from "../../components/ui/InputField.tsx";
 import SignUpButton from "../../components/auth/SignUpButton.tsx";
-import { signUp } from "../../api/auth.ts"; 
+import useSignUpForm from "../../hooks/useSignUpForm.ts";
+import { signUp, sendVerificationEmail, verifyCode, checkUsernameAvailability, checkNicknameAvailability } from "../../api/auth.ts"; 
+import { locationMapping } from "../../constants/locationMapping.ts";
+import { categoryMapping } from "../../constants/categoryMapping.ts";
 import "./SignUpPage.css";
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const usernamePattern = /^[a-zA-Z0-9]{5,15}$/;
-const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,17}$/;
-
-interface SignUpFormData {
-  email: string;
-  username: string;
-  password: string;
-  confirmPassword: string;
-  nickname: string;
-  major: string;
-  introduction: string;
-  isOnline: boolean;
-  notificationEnabled: boolean;
-  location: string;
-  studyCategories: string[];
-}
-
-const locationMapping: { [key: string]: string } = {
-  SEOUL: "서울",
-  GYEONGGIDO: "경기도",
-  GANGWONDO: "강원도",
-  CHUNGCHEONGNAMDO: "충청남도",
-  CHUNGCHEONGBUKDO: "충청북도",
-  JEOLLANAMDO: "전라남도",
-  JEOLLABUKDO: "전라북도",
-  GYEONGSANGNAMDO: "경상남도",
-  GYEONGSANGBUKDO: "경상북도",
-  JEJU: "제주특별자치도",
-  INCHEON: "인천광역시",
-  DAEJEON: "대전광역시",
-  DAEGU: "대구광역시",
-  GWANGJU: "광주광역시",
-  ULSAN: "울산광역시",
-  BUSAN: "부산광역시",
-  OTHERS: "기타"
-};
-
-const categoryMapping: { [key: string]: string } = {
-  LANGUAGE: "어학",
-  CERTIFICATION: "자격증",
-  HUMANITIES: "인문학",
-  SOCIAL_SCIENCES: "사회과학",
-  DESIGN: "디자인",
-  SCIENCE: "과학",
-  PROGRAMMING: "프로그래밍",
-  CAREER: "취업/커리어",
-  QUALIFICATION_EXAM: "고시/공무원",
-  HOBBY: "취미",
-  OTHERS: "기타"
-};
-
 const SignUpPage: React.FC = () => {
-  const [formData, setFormData] = useState<SignUpFormData>({
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-    nickname: "",
-    major: "",
-    introduction: "",
-    isOnline: false,
-    notificationEnabled: true,
-    location: "",
-    studyCategories: []
-  });
-
-  const [errors, setErrors] = useState<any>({});
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const { formData, errors, handleInputChange, setErrors, setFormData } = useSignUpForm();
   
-    let error = "";
-    switch (name) {
-      case "email":
-        if (!emailPattern.test(value)) error = "이메일 형식이 올바르지 않습니다.";
-        break;
-      case "username":
-        if (!usernamePattern.test(value)) error = "아이디는 5~15자, 영문과 숫자만 가능합니다.";
-        break;
-      case "password":
-        if (!passwordPattern.test(value)) error = "비밀번호는 8~17자, 대소문자, 숫자, 특수문자가 포함되어야 합니다.";
-        break;
-      case "confirmPassword":
-        if (value !== formData.password) error = "비밀번호가 일치하지 않습니다.";
-        break;
-      default:
-        break;
+  const [emailStatusMessage, setEmailStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
+  const [codeStatusMessage, setCodeStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
+
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
+
+  const handleSignup = async () => {
+    const fieldErrors = validateFields(formData);
+    const verificationErrors = validateVerification(formData);
+
+    if (Object.keys(fieldErrors).length > 0) {
+      setErrors((prev: any) => ({ ...prev, ...fieldErrors }));
+      return;
     }
   
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-  
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-  
-  const handleSignup = async () => {
-    console.log("회원가입 데이터:", formData);
+    if (Object.keys(verificationErrors).length > 0) {
+      setErrors((prev: any) => ({ ...prev, ...verificationErrors }));
+      return;
+    }
+
     setErrors({});
     try {
       const response = await signUp(formData);  
@@ -120,14 +44,77 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-  const handleEmailValidation = () => {
-    // 이메일 인증 처리
+  const handleEmailVerification = async () => {
+    try {
+      const response = await sendVerificationEmail(formData.email);
+      if (response.isSuccess) {
+        setEmailStatusMessage({ type: "success", message: "이메일이 전송되었습니다." });
+      }
+    } catch (error) {
+      setEmailStatusMessage({ type: "error", message: "이메일 전송에 실패했습니다. 잠시 후 다시 시도해 주세요." });
+    }
   };
 
-  const handleUsernameValidation = () => {
-    // 중복 확인 처리
+  const handleVerificationCodeValidation = async () => {
+    try {
+      const response = await verifyCode(formData.email, formData.verificationCode);
+      if (response.isSuccess) {
+        setIsEmailVerified(true);
+        setErrors((prev) => ({
+          ...prev,
+          verificationCode: "",
+        }));
+        setCodeStatusMessage({ type: "success", message: "이메일 인증에 성공했습니다." }); 
+      }
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        verificationCode: "인증 번호가 올바르지 않습니다.",
+      }));
+      setCodeStatusMessage({ type: "error", message: "인증 번호가 올바르지 않습니다." }); 
+    }
   };
 
+  const handleUsernameValidation = async () => {
+    try {
+      const response = await checkUsernameAvailability(formData.username);
+      if (response.isSuccess) {
+        setIsUsernameAvailable(true);
+        setErrors((prev) => ({
+          ...prev,
+          username: response.result
+            ? "사용 가능한 아이디입니다."  
+            : "이미 사용 중인 아이디입니다.", 
+        }));
+      }
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        username: "아이디 중복 확인에 실패했습니다."
+      }));
+    }
+  };
+
+  const handleNicknameValidation = async () => {
+    try {
+      const response = await checkNicknameAvailability(formData.nickname);
+      if (response.isSuccess) {
+        setIsNicknameAvailable(true);
+        setErrors((prev) => ({
+          ...prev,
+          nickname: response.result 
+            ? "사용 가능한 닉네임입니다." 
+            : "이미 사용 중인 닉네임입니다."
+        }));
+      }
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        nickname: "닉네임 중복 확인에 실패했습니다."
+      }));
+    }
+  };
+  
   const handleLocationChange = (location: string) => {
     setFormData({ ...formData, location });
   };
@@ -148,6 +135,27 @@ const SignUpPage: React.FC = () => {
       notificationEnabled: !prevState.notificationEnabled
     }));
   };
+
+  const validateFields = (data: any) => {
+    let errors: any = {};
+    if (!data.email) errors.email = "이메일을 입력해주세요.";
+    if (!data.username) errors.username = "아이디를 입력해주세요.";
+    if (!data.password) errors.password = "비밀번호를 입력해주세요.";
+    if (!data.confirmPassword) errors.confirmPassword = "비밀번호 확인을 입력해주세요.";
+    if (!data.nickname) errors.nickname = "닉네임을 입력해주세요.";
+    if (!data.major) errors.major = "전공을 입력해주세요.";
+    if (!data.location) errors.location = "선호하는 스터디 지역을 선택해주세요.";
+    if (!data.studyCategories || data.studyCategories.length === 0) errors.studyCategories = "관심 있는 스터디 카테고리를 선택해주세요.";
+    return errors;
+  };
+
+  const validateVerification = (data: any) => {
+    let errors: any = {};
+    if (!isEmailVerified) errors.email = "이메일 인증이 필요합니다.";
+    if (!isUsernameAvailable) errors.username = "아이디 중복 확인이 필요합니다.";
+    if (!isNicknameAvailable) errors.nickname = "닉네임 중복 확인이 필요합니다.";
+    return errors;
+  };
   
   return (
     <div className="signup-page">
@@ -164,9 +172,27 @@ const SignUpPage: React.FC = () => {
             onChange={handleInputChange}
             className={errors.email ? "error" : ""}
           />
-          <button className="verify-button" onClick={handleEmailValidation}>이메일 인증</button>
+          <button className="verify-button" onClick={handleEmailVerification}>이메일 인증</button>
         </div>
+        {emailStatusMessage.message && <p className={`message ${emailStatusMessage.type}`}>{emailStatusMessage.message}</p>}
         {errors.email && <p className="error-message">{errors.email}</p>}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="verificationCode" className="required">인증 번호</label>
+          <div className="input-with-button">
+            <InputField
+              type="text"
+              name="verificationCode"
+              placeholder="인증 번호를 입력하세요."
+              value={formData.verificationCode}
+              onChange={handleInputChange}
+              className={errors.verificationCode ? "error" : ""}
+            />
+            <button className="verify-button" onClick={handleVerificationCodeValidation}>인증 번호 확인</button>
+          </div>
+          {codeStatusMessage.message && <p className={`message ${codeStatusMessage.type}`}>{codeStatusMessage.message}</p>}
+          {errors.verificationCode && <p className="error-message">{errors.verificationCode}</p>}
       </div>
 
       <div className="form-group">
@@ -182,7 +208,11 @@ const SignUpPage: React.FC = () => {
           />
           <button className="verify-button" onClick={handleUsernameValidation}>중복 확인</button>
         </div>
-        {errors.username && <p className="error-message">{errors.username}</p>}
+        {errors.username && (
+            <p className={`message ${isUsernameAvailable ? "success" : "error error-message"}`}>
+              {errors.username}
+            </p>
+          )}
       </div>
 
       <div className="form-group">
@@ -219,10 +249,14 @@ const SignUpPage: React.FC = () => {
             value={formData.nickname}
             onChange={handleInputChange}
           />
-          <button className="verify-button">중복 확인</button>
+          <button className="verify-button" onClick={handleNicknameValidation}>중복 확인</button>
+          </div>
+          {errors.nickname && (
+            <p className={`message ${isNicknameAvailable ? "success" : "error error-message"}`}>
+              {errors.nickname}
+            </p>
+          )}
         </div>
-        {errors.nickname && <p className="error-message">{errors.nickname}</p>}
-      </div>
 
       <div className="form-group">
         <label htmlFor="major" className="required">전공</label>
@@ -233,6 +267,7 @@ const SignUpPage: React.FC = () => {
           value={formData.major}
           onChange={handleInputChange}
         />
+        {errors.major && <p className="error-message">{errors.major}</p>}
       </div>
 
       <div className="form-group">
@@ -259,6 +294,7 @@ const SignUpPage: React.FC = () => {
             </button>
           ))}
         </div>
+        {errors.location && <p className="error-message">{errors.location}</p>}
       </div>
 
       <div className="form-group">
@@ -275,6 +311,7 @@ const SignUpPage: React.FC = () => {
             </button>
           ))}
         </div>
+        {errors.studyCategories && <p className="error-message">{errors.studyCategories}</p>}
       </div>
 
       <div className="notification-container">
