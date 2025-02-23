@@ -70,7 +70,7 @@ const LoginPage: React.FC = () => {
           placeholder="아이디"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className={errors.username ? "error" : ""}
+          className={errors.username ? "login-error" : ""}
         />
         {errors.username && <p className="error-message">{errors.username}</p>}
 
@@ -79,7 +79,7 @@ const LoginPage: React.FC = () => {
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className={errors.password ? "error" : ""}
+          className={errors.password ? "login-error" : ""}
         />
         {errors.password && <p className="error-message">{errors.password}</p>}
 

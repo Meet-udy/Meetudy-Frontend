@@ -115,3 +115,41 @@ export const findPassword = async (username: string, email: string): Promise<Api
     throw new Error("비밀번호 찾기 중 오류 발생");
   }
 };
+
+export const sendVerificationEmail = async (email: string): Promise<ApiResponse<string>> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/send/verification`, { email });
+    return response.data;
+  } catch (error) {
+    throw new Error("이메일 전송에 실패했습니다.");
+  }
+};
+
+export const verifyCode = async (email: string, code: string): Promise<ApiResponse<string>> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/verification`, { email, code });
+    return response.data;
+  } catch (error) {
+    throw new Error("인증 번호 검증 중 오류가 발생했습니다.");
+  }
+};
+
+export const checkUsernameAvailability = async (username: string): Promise<ApiResponse<boolean>> => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/members/username/duplication`, { username });
+    return response.data;
+  } catch (error) {
+    throw new Error("아이디 중복 확인 중 오류가 발생했습니다.");
+  }
+};
+
+export const checkNicknameAvailability = async (nickname: string): Promise<ApiResponse<boolean>> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/members/nickname/duplication`, {
+      params: { nickname }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("닉네임 중복 확인 중 오류가 발생했습니다.");
+  }
+};

@@ -157,6 +157,11 @@ input[type="checkbox"] {
   font-size: 12px;
 }
 
+.message.success {
+  color: green;
+  font-size: 12px;
+}
+
 .notification-container {
   margin: 20px 0;
   display: flex;
