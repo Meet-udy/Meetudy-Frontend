@@ -1,5 +1,4 @@
 import React from "react";
-import "./KakaoLoginButton.css";
 
 interface KakaoLoginButtonProps {
   onClick: () => void;
@@ -7,14 +6,28 @@ interface KakaoLoginButtonProps {
 
 const KakaoLoginButton: React.FC<KakaoLoginButtonProps> = ({ onClick }) => {
   return (
-    <button className="kakao-login-button" onClick={onClick}>
+    <button style={kakaoLoginButtonStyle} onClick={onClick}>
       <img
-        src="/images/kakao_login_medium_narrow.png"  // public 폴더 내 이미지 경로
+        src="/images/kakao_login_medium_narrow.png"
         alt="카카오 로그인"
-        className="kakao-button-img"
+        style={kakaoButtonImgStyle}
       />
     </button>
   );
+};
+
+const kakaoLoginButtonStyle: React.CSSProperties = {
+  background: "transparent",
+  border: "none",
+  cursor: "pointer",
+  width: "200px",
+  height: "80px",
+};
+
+const kakaoButtonImgStyle: React.CSSProperties = {
+  width: "100%",
+  height: "100%",
+  objectFit: "contain",
 };
 
 export default KakaoLoginButton;

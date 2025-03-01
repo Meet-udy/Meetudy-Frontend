@@ -59,6 +59,11 @@ const LoginPage: React.FC = () => {
     navigate("/find-account"); 
   };
 
+  const handleSignUp = () => {
+    navigate('/signup');  
+  };
+
+
   return (
     <div className="login-page-container">
       <h1 className="login-title">MEETUDY</h1>
@@ -67,6 +72,7 @@ const LoginPage: React.FC = () => {
         <div className="line-with-text">이메일 로그인</div>
         <InputField
           type="text"
+          name="username"
           placeholder="아이디"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -76,6 +82,7 @@ const LoginPage: React.FC = () => {
 
         <InputField
           type="password"
+          name="password"
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -103,7 +110,10 @@ const LoginPage: React.FC = () => {
           </div>
           <div className="signup-container">
             <Link to="/signup">
-              <SignupButton text="회원가입" />
+              <SignupButton 
+                text="회원가입"
+                onClick={handleSignUp} 
+              />
             </Link>
           </div>
         </div>

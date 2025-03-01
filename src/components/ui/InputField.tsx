@@ -1,5 +1,5 @@
 import React from "react";
-import "./InputField.css";
+import styled from "styled-components";
 
 interface InputFieldProps {
   name: string;
@@ -7,19 +7,34 @@ interface InputFieldProps {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, value, onChange }) => {
+const InputField: React.FC<InputFieldProps> = ({ name, type, placeholder, value, onChange, className }) => {
   return (
-    <input
+    <StyledInput
       name={name}
       type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className="input-field"
+      className={className} 
     />
   );
 };
 
 export default InputField;
+
+const StyledInput = styled.input`
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  width: 100%;
+  height: 20px;
+
+  &.login-error { 
+    border-color: red;  // error 스타일 예시
+  }
+`;
