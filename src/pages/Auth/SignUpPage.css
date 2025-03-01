@@ -30,26 +30,20 @@
 }
   
 .verify-button {
-  color: #1f72c5;
-  border: 1px solid #1f72c5;
-  cursor: pointer;
   position: absolute;
   right: -10px;
   top: 50%;
   transform: translateY(-50%);
-  padding: 5px 10px;
-  background-color: rgb(242, 249, 255);
   margin-top: -2px;
-  border-radius: 5px;
 }
   
-  input, select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-top: 1px;
-  }
+input, select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 1px;
+}
   
 input.error, select.error {
   border-color: red;
@@ -105,41 +99,6 @@ select.error {
   color: red;
 }
   
-.location-buttons button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: white;
-  color: #1f72c5;
-}
-
-.location-buttons button.selected {
-  background-color: rgb(242, 249, 255);
-  color: #1f72c5;
-}
-
-.category-buttons button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: white;
-  color: #1f72c5;
-}
-
-.category-buttons button.selected {
-  background-color: rgb(242, 249, 255);
-  color: #1f72c5;
-}
-
-.category-buttons button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 input[type="checkbox"] {
   accent-color: #1f72c5;
   transform: scale(1.5); 
@@ -204,9 +163,6 @@ input[type="checkbox"] {
 }
 
 .notification-checkbox {
-  accent-color: #1f72c5;
-  transform: scale(1.5);
-  cursor: pointer;
   position: relative;
   left: -65px; 
   margin-top: -42px;
