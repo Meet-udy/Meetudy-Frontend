@@ -1,14 +1,52 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import InputField from "../../components/ui/InputField.tsx";
 import SignUpButton from "../../components/auth/SignUpButton.tsx";
-import useSignUpForm from "../../hooks/useSignUpForm.ts";
+import VerifyButton from "../../components/ui/VerifyButton.tsx";
+import SelectableButton from "../../components/ui/SelectableButton.tsx";
+import Checkbox from "../../components/ui/Checkbox.tsx";
+import Modal from "../../components/ui/Modal.tsx";
 import { signUp, sendVerificationEmail, verifyCode, checkUsernameAvailability, checkNicknameAvailability } from "../../api/auth.ts"; 
+import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from "../../utils/validators.ts";
 import { locationMapping } from "../../constants/locationMapping.ts";
 import { categoryMapping } from "../../constants/categoryMapping.ts";
 import "./SignUpPage.css";
 
+interface SignUpFormData {
+  email: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+  major: string;
+  introduction: string;
+  isOnline: boolean;
+  notificationEnabled: boolean;
+  location: string;
+  studyCategories: string[];
+}
+
 const SignUpPage: React.FC = () => {
-  const { formData, errors, handleInputChange, setErrors, setFormData } = useSignUpForm();
+  const [formData, setFormData] = useState<SignUpFormData>({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    nickname: "",
+    major: "",
+    introduction: "",
+    isOnline: false,
+    notificationEnabled: true,
+    location: "",
+    studyCategories: []
+  });
+
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState<any>({});
+  const [verificationCode, setVerificationCode] = useState("")
+
+  const [isModalOpen, setIsModalOpen] = useState(false);  
+  const [modalMessage, setModalMessage] = useState("");
   
   const [emailStatusMessage, setEmailStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
   const [codeStatusMessage, setCodeStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
@@ -16,6 +54,38 @@ const SignUpPage: React.FC = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+  
+      let error = "";
+      switch (name) {
+        case "email":
+          error = validateEmail(value);
+          break;
+        case "username":
+          error = validateUsername(value);
+          break;
+        case "password":
+          error = validatePassword(value);
+          break;
+        case "confirmPassword":
+          error = validateConfirmPassword(value, formData.password);
+          break;
+        default:
+          break;
+      }
+  
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
+  
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    };
 
   const handleSignup = async () => {
     const fieldErrors = validateFields(formData);
@@ -35,7 +105,8 @@ const SignUpPage: React.FC = () => {
     try {
       const response = await signUp(formData);  
       if (response.isSuccess) {
-        alert("회원가입이 완료되었습니다.");
+        setModalMessage("회원가입이 완료되었습니다.");
+        setIsModalOpen(true);
       } else {
         setErrors({ general: response.message });
       }
@@ -57,7 +128,7 @@ const SignUpPage: React.FC = () => {
 
   const handleVerificationCodeValidation = async () => {
     try {
-      const response = await verifyCode(formData.email, formData.verificationCode);
+      const response = await verifyCode(formData.email, verificationCode);
       if (response.isSuccess) {
         setIsEmailVerified(true);
         setErrors((prev) => ({
@@ -136,6 +207,18 @@ const SignUpPage: React.FC = () => {
     }));
   };
 
+  const handleGoHome = () => {
+    navigate("/");  
+  };
+
+  const handleGoLogin = () => {
+    navigate("/login");  
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const validateFields = (data: any) => {
     let errors: any = {};
     if (!data.email) errors.email = "이메일을 입력해주세요.";
@@ -172,7 +255,7 @@ const SignUpPage: React.FC = () => {
             onChange={handleInputChange}
             className={errors.email ? "error" : ""}
           />
-          <button className="verify-button" onClick={handleEmailVerification}>이메일 인증</button>
+          <VerifyButton onClick={handleEmailVerification}>이메일 인증</VerifyButton>
         </div>
         {emailStatusMessage.message && <p className={`message ${emailStatusMessage.type}`}>{emailStatusMessage.message}</p>}
         {errors.email && <p className="error-message">{errors.email}</p>}
@@ -185,11 +268,11 @@ const SignUpPage: React.FC = () => {
               type="text"
               name="verificationCode"
               placeholder="인증 번호를 입력하세요."
-              value={formData.verificationCode}
-              onChange={handleInputChange}
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
               className={errors.verificationCode ? "error" : ""}
             />
-            <button className="verify-button" onClick={handleVerificationCodeValidation}>인증 번호 확인</button>
+            <VerifyButton onClick={handleVerificationCodeValidation}>인증 번호 확인</VerifyButton>
           </div>
           {codeStatusMessage.message && <p className={`message ${codeStatusMessage.type}`}>{codeStatusMessage.message}</p>}
           {errors.verificationCode && <p className="error-message">{errors.verificationCode}</p>}
@@ -206,7 +289,7 @@ const SignUpPage: React.FC = () => {
             onChange={handleInputChange}
             className={errors.username ? "error" : ""}
           />
-          <button className="verify-button" onClick={handleUsernameValidation}>중복 확인</button>
+          <VerifyButton onClick={handleUsernameValidation}>중복 확인</VerifyButton>
         </div>
         {errors.username && (
             <p className={`message ${isUsernameAvailable ? "success" : "error error-message"}`}>
@@ -249,7 +332,7 @@ const SignUpPage: React.FC = () => {
             value={formData.nickname}
             onChange={handleInputChange}
           />
-          <button className="verify-button" onClick={handleNicknameValidation}>중복 확인</button>
+          <VerifyButton onClick={handleNicknameValidation}>중복 확인</VerifyButton>
           </div>
           {errors.nickname && (
             <p className={`message ${isNicknameAvailable ? "success" : "error error-message"}`}>
@@ -285,15 +368,14 @@ const SignUpPage: React.FC = () => {
         <label className="required">선호하는 스터디 지역</label>
         <div className="location-buttons">
           {Object.keys(locationMapping).map(location => (
-            <button
-              key={location}
-              className={`location-button ${formData.location === location ? "selected" : ""}`}
-              onClick={() => handleLocationChange(location)}
-            >
-              {locationMapping[location]} 
-            </button>
-          ))}
-        </div>
+            <SelectableButton
+            key={location}
+            label={locationMapping[location]}
+            isSelected={formData.location === location}
+            onClick={() => handleLocationChange(location)}
+          />
+        ))}
+      </div>
         {errors.location && <p className="error-message">{errors.location}</p>}
       </div>
 
@@ -301,16 +383,15 @@ const SignUpPage: React.FC = () => {
         <label className="required">관심 있는 스터디 카테고리</label>
         <div className="category-buttons">
           {Object.keys(categoryMapping).map(category => (
-            <button
-              key={category}
-              className={`category-button ${formData.studyCategories.includes(category) ? "selected" : ""}`}
-              onClick={() => handleCategoryChange(category)}
-              disabled={formData.studyCategories.length >= 5 && !formData.studyCategories.includes(category)}
-            >
-              {categoryMapping[category]} 
-            </button>
-          ))}
-        </div>
+            <SelectableButton
+            key={category}
+            label={categoryMapping[category]}
+            isSelected={formData.studyCategories.includes(category)}
+            onClick={() => handleCategoryChange(category)}
+            disabled={formData.studyCategories.length >= 5 && !formData.studyCategories.includes(category)}
+          />
+        ))}
+      </div>
         {errors.studyCategories && <p className="error-message">{errors.studyCategories}</p>}
       </div>
 
@@ -320,20 +401,25 @@ const SignUpPage: React.FC = () => {
           <p className="notification-description">
             스터디 활동 중 발생하는 다양한 알림을 제공해 드립니다.
           </p>
-          <div className="checkbox-container">
-            <input
-              type="checkbox"
-              checked={formData.notificationEnabled}
-              onChange={handleNotificationChange}
-              className="notification-checkbox"
-            />
-            <label className="checkbox-label">푸시 알림 수신 동의 (선택)</label>
-          </div>
+          <Checkbox
+            checked={formData.notificationEnabled}
+            onChange={handleNotificationChange}
+            label="푸시 알림 수신 동의 (선택)"
+          />
         </div>
       </div>
 
-      <SignUpButton onClick={handleSignup} text="회원가입" />
+      <SignUpButton onClick={handleSignup} text="회원가입" className="signup-button" />
       {errors.general && <p className="error-message">{errors.general}</p>}
+    
+      {isModalOpen && (
+        <Modal
+          message={modalMessage}
+          onClose={handleCloseModal}
+          onConfirmHome={handleGoHome}
+          onConfirmLogin={handleGoLogin}
+        />
+      )}
     </div>
   );
 };
