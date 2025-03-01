@@ -2,11 +2,6 @@ import React, { useState } from "react";
 import { Header } from "../../components/layout/Header.tsx";
 import { SearchBar } from "../../components/ui/SearchBar.tsx";
 import { SearchButton } from "../../components/ui/SearchButton.tsx";
-import "../../components/ui/SearchBar.css";
-import "../../components/ui/SearchButton.css";
-import '../../components/layout/Header.css';
-import "../../components/layout/NavBar.css";
-import "../../components/layout/UserMenu.css";
 import "./HomePage.css";
 
 export const HomePage: React.FC = () => {
@@ -20,7 +15,6 @@ export const HomePage: React.FC = () => {
   return (
     <div className="home-page-container">
       <Header /> 
-
       <main>
         <section className="home-page">
           <SearchBar
