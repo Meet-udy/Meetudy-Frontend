@@ -1,5 +1,4 @@
 import React from "react";
-import "./LoginButton.css";
 
 interface LoginButtonProps {
   text: string;
@@ -8,10 +7,22 @@ interface LoginButtonProps {
 
 const LoginButton: React.FC<LoginButtonProps> = ({ text, onClick }) => {
   return (
-    <button className="login-button" onClick={onClick}>
+    <button style={loginButtonStyle} onClick={onClick}>
       {text}
     </button>
   );
+};
+
+const loginButtonStyle: React.CSSProperties = {
+  padding: "10px",
+  border: "none",
+  backgroundColor: "#1f72c5",
+  color: "white",
+  cursor: "pointer",
+  borderRadius: "5px",
+  width: "107%",
+  fontSize: "16px",
+  height: "40px",
 };
 
 export default LoginButton;
