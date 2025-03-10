@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import InputField from "../../components/ui/InputField.tsx";
 import SignUpButton from "../../components/auth/SignUpButton.tsx";
 import VerifyButton from "../../components/ui/VerifyButton.tsx";
 import SelectableButton from "../../components/ui/SelectableButton.tsx";
 import Checkbox from "../../components/ui/Checkbox.tsx";
 import Modal from "../../components/ui/Modal.tsx";
-import { signUp, sendVerificationEmail, verifyCode, checkUsernameAvailability, checkNicknameAvailability } from "../../api/auth.ts"; 
+import { signUp, sendVerificationEmail, verifyCode } from "../../api/auth.ts"; 
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from "../../utils/validators.ts";
 import { locationMapping } from "../../constants/locationMapping.ts";
 import { categoryMapping } from "../../constants/categoryMapping.ts";
+import { useSignUpPage } from "../../hooks/useSignUpPage.ts";
+import { useModal } from "../../hooks/useModal.ts";
 import "./SignUpPage.css";
 
 interface SignUpFormData {
@@ -41,19 +42,23 @@ const SignUpPage: React.FC = () => {
     studyCategories: []
   });
 
-  const navigate = useNavigate();
   const [errors, setErrors] = useState<any>({});
   const [verificationCode, setVerificationCode] = useState("")
+  const { isModalOpen, setIsModalOpen, modalMessage, setModalMessage, handleCloseModal, handleGoHome, handleGoLogin } = useModal();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);  
-  const [modalMessage, setModalMessage] = useState("");
+  const {
+    isUsernameAvailable,
+    isNicknameAvailable,
+    handleUsernameValidation,
+    handleNicknameValidation,
+    handleLocationChange,
+    handleCategoryChange,
+    handleNotificationChange
+  } = useSignUpPage(formData, setFormData, setErrors);
   
   const [emailStatusMessage, setEmailStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
   const [codeStatusMessage, setCodeStatusMessage] = useState<{ type: "error" | "success" | null; message: string }>({ type: null, message: "" });
-
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -102,6 +107,7 @@ const SignUpPage: React.FC = () => {
     }
 
     setErrors({});
+    
     try {
       const response = await signUp(formData);  
       if (response.isSuccess) {
@@ -144,79 +150,6 @@ const SignUpPage: React.FC = () => {
       }));
       setCodeStatusMessage({ type: "error", message: "인증 번호가 올바르지 않습니다." }); 
     }
-  };
-
-  const handleUsernameValidation = async () => {
-    try {
-      const response = await checkUsernameAvailability(formData.username);
-      if (response.isSuccess) {
-        setIsUsernameAvailable(true);
-        setErrors((prev) => ({
-          ...prev,
-          username: response.result
-            ? "사용 가능한 아이디입니다."  
-            : "이미 사용 중인 아이디입니다.", 
-        }));
-      }
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        username: "아이디 중복 확인에 실패했습니다."
-      }));
-    }
-  };
-
-  const handleNicknameValidation = async () => {
-    try {
-      const response = await checkNicknameAvailability(formData.nickname);
-      if (response.isSuccess) {
-        setIsNicknameAvailable(true);
-        setErrors((prev) => ({
-          ...prev,
-          nickname: response.result 
-            ? "사용 가능한 닉네임입니다." 
-            : "이미 사용 중인 닉네임입니다."
-        }));
-      }
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        nickname: "닉네임 중복 확인에 실패했습니다."
-      }));
-    }
-  };
-  
-  const handleLocationChange = (location: string) => {
-    setFormData({ ...formData, location });
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setFormData(prevState => {
-      const newCategories = prevState.studyCategories.includes(category)
-        ? prevState.studyCategories.filter(c => c !== category)
-        : [...prevState.studyCategories, category];
-
-      return { ...prevState, studyCategories: newCategories };
-    });
-  };
-  
-  const handleNotificationChange = () => {
-    setFormData(prevState => ({
-      ...prevState,
-      notificationEnabled: !prevState.notificationEnabled
-    }));
-  };
-
-  const handleGoHome = () => {
-    navigate("/");  
-  };
-
-  const handleGoLogin = () => {
-    navigate("/login");  
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
   };
 
   const validateFields = (data: any) => {
