@@ -14,7 +14,12 @@ const OAuth2RedirectHandler: React.FC = () => {
           if (response.isSuccess && response.result) {
             localStorage.setItem("accessToken", response.result.jwtTokenDto.accessToken);
             localStorage.setItem("refreshToken", response.result.jwtTokenDto.refreshToken);
-            navigate("/");
+            
+            if (response.result.isFirstLogin) {
+              navigate("/additional-info");
+            } else {
+              navigate("/");
+            }
           } else {
             alert("카카오 로그인에 실패했습니다.");
             navigate("/login");
