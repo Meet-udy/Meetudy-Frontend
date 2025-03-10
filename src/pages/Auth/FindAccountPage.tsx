@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { findUsername, findPassword } from "../../api/auth.ts"; 
 import Modal from '../../components/ui/Modal.tsx';
+import { useModal } from '../../hooks/useModal.ts';
 import './FindAccountPage.css';
 
 const FindAccountPage = () => {
@@ -9,8 +9,7 @@ const FindAccountPage = () => {
   const [email, setEmail] = useState(''); 
   const [username, setUsername] = useState(''); 
   const [message, setMessage] = useState(''); 
-  const [isModalOpen, setIsModalOpen] = useState(false);  
-  const navigate = useNavigate();
+  const { isModalOpen, setIsModalOpen, handleCloseModal, handleGoHome, handleGoLogin } = useModal(); 
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -42,18 +41,6 @@ const FindAccountPage = () => {
       setMessage('비밀번호 찾기 중 오류가 발생했습니다.');
     }
       setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-   };
-
-  const handleGoHome = () => {
-    navigate("/");  
-  };
-
-  const handleGoLogin = () => {
-    navigate("/login");  
   };
 
   return (
