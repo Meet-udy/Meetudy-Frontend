@@ -30,6 +30,16 @@ export interface KakaoLoginDto {
   isFirstLogin: boolean;
 }
 
+export interface AdditionalInfoDto {
+  nickname: string;
+  major: string;
+  introduction?: string;
+  isOnline: boolean;
+  notificationEnabled: boolean;
+  location: string;
+  studyCategories: string[];
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   code: string;
@@ -151,5 +161,22 @@ export const checkNicknameAvailability = async (nickname: string): Promise<ApiRe
     return response.data;
   } catch (error) {
     throw new Error("닉네임 중복 확인 중 오류가 발생했습니다.");
+  }
+};
+
+export const updateAdditionalInfo = async(additionalInfoDto: AdditionalInfoDto, token: string) => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/members/additional-info`,
+      additionalInfoDto,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("추가 정보 입력 중 오류가 발생했습니다.");
   }
 };
