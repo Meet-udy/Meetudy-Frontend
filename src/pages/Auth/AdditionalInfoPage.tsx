@@ -5,7 +5,7 @@ import VerifyButton from "../../components/ui/VerifyButton.tsx";
 import SelectableButton from "../../components/ui/SelectableButton.tsx";
 import Checkbox from "../../components/ui/Checkbox.tsx";
 import Modal from "../../components/ui/Modal.tsx";
-import { updateAdditionalInfo } from "../../api/auth.ts"; 
+import { updateAdditionalInfo } from "../../api/authApi.ts"; 
 import { locationMapping } from "../../constants/locationMapping.ts";
 import { categoryMapping } from "../../constants/categoryMapping.ts";
 import { useSignUpPage } from "../../hooks/useSignUpPage.ts";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { signIn } from "../../api/auth.ts";
+import { signIn } from "../../api/authApi.ts";
 import LoginButton from "../../components/auth/LoginButton.tsx";
 import KakaoLoginButton from "../../components/auth/KakaoLoginButton.tsx";  
 import InputField from "../../components/ui/InputField.tsx";  

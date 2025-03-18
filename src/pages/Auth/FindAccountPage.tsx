@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { findUsername, findPassword } from "../../api/auth.ts"; 
+import { findUsername, findPassword } from "../../api/authApi.ts"; 
 import Modal from '../../components/ui/Modal.tsx';
 import { useModal } from '../../hooks/useModal.ts';
 import './FindAccountPage.css';

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { checkUsernameAvailability, checkNicknameAvailability } from "../api/auth.ts";
+import { checkUsernameAvailability, checkNicknameAvailability } from "../api/authApi.ts";
 
 export const useSignUpPage = (
     formData: any, 
