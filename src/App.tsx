@@ -6,6 +6,7 @@ import LoginPage from "./pages/Auth/LoginPage.tsx";
 import FindAccountPage from "./pages/Auth/FindAccountPage.tsx";
 import KakaoRedirectHandler from "./pages/Auth/KakaoRedirectHandler.tsx";
 import AdditionalInfoPage from "./pages/Auth/AdditionalInfoPage.tsx";
+import StudyGroupPage from "./pages/Study/StudyGroupPage.tsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/find-account" element={<FindAccountPage />} />
           <Route path="/oauth2/callback/kakao" element={<KakaoRedirectHandler />} />
           <Route path="/additional-info" element={<AdditionalInfoPage />} />
+          <Route path="/study-groups" element={<StudyGroupPage />} />
         </Routes>
       </div>
     </Router>
