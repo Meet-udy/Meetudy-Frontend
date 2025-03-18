@@ -5,7 +5,7 @@ import VerifyButton from "../../components/ui/VerifyButton.tsx";
 import SelectableButton from "../../components/ui/SelectableButton.tsx";
 import Checkbox from "../../components/ui/Checkbox.tsx";
 import Modal from "../../components/ui/Modal.tsx";
-import { signUp, sendVerificationEmail, verifyCode } from "../../api/auth.ts"; 
+import { signUp, sendVerificationEmail, verifyCode } from "../../api/authApi.ts"; 
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from "../../utils/validators.ts";
 import { locationMapping } from "../../constants/locationMapping.ts";
 import { categoryMapping } from "../../constants/categoryMapping.ts";
@@ -107,7 +107,7 @@ const SignUpPage: React.FC = () => {
     }
 
     setErrors({});
-    
+
     try {
       const response = await signUp(formData);  
       if (response.isSuccess) {

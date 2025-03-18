@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { kakaoLogin } from "../../api/auth.ts";
+import { kakaoLogin } from "../../api/authApi.ts";
 
 const OAuth2RedirectHandler: React.FC = () => {
   const [searchParams] = useSearchParams();
