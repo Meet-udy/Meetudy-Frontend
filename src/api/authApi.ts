@@ -49,7 +49,9 @@ export interface ApiResponse<T> {
 
 export const signUp = async (signUpDto: SignUpDto) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/members/sign-up`, signUpDto);
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/members/sign-up`, signUpDto);
+
     return response.data;
   } catch (error) {
     throw new Error("회원가입 중 오류가 발생했습니다.");
@@ -77,6 +79,7 @@ export const kakaoLogin = async (code: string): Promise<ApiResponse<KakaoLoginDt
     const response = await axios.post<ApiResponse<KakaoLoginDto>>(
       `${API_BASE_URL}/members/kakao/login?code=${code}`
     );
+
     return response.data;
   } catch (error) {
     throw new Error("카카오 로그인 중 오류 발생");
@@ -85,7 +88,7 @@ export const kakaoLogin = async (code: string): Promise<ApiResponse<KakaoLoginDt
 
 export const logout = async (accessToken: string): Promise<void> => {
   try {
-    await axios.post(
+    await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/members/logout`, 
       {},
       {
@@ -104,7 +107,9 @@ export const logout = async (accessToken: string): Promise<void> => {
 
 export const findUsername = async (email: string): Promise<ApiResponse<string>> => {
   try {
-    const response = await axios.post<ApiResponse<string>>(`${API_BASE_URL}/members/username`, { email });
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/members/username`, { email });
+
     return response.data;
   } catch (error: any) {
     if (error.response) {
@@ -116,7 +121,9 @@ export const findUsername = async (email: string): Promise<ApiResponse<string>> 
 
 export const findPassword = async (username: string, email: string): Promise<ApiResponse<string>> => {
   try {
-    const response = await axios.post<ApiResponse<string>>(`${API_BASE_URL}/members/password`, { username, email });
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/members/password`, { username, email });
+
     return response.data;
   } catch (error: any) {
     if (error.response) {
@@ -128,7 +135,9 @@ export const findPassword = async (username: string, email: string): Promise<Api
 
 export const sendVerificationEmail = async (email: string): Promise<ApiResponse<string>> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/send/verification`, { email });
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/auth/send/verification`, { email });
+
     return response.data;
   } catch (error) {
     throw new Error("이메일 전송에 실패했습니다.");
@@ -137,7 +146,9 @@ export const sendVerificationEmail = async (email: string): Promise<ApiResponse<
 
 export const verifyCode = async (email: string, code: string): Promise<ApiResponse<string>> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/verification`, { email, code });
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/auth/verification`, { email, code });
+
     return response.data;
   } catch (error) {
     throw new Error("인증 번호 검증 중 오류가 발생했습니다.");
@@ -146,7 +157,9 @@ export const verifyCode = async (email: string, code: string): Promise<ApiRespon
 
 export const checkUsernameAvailability = async (username: string): Promise<ApiResponse<boolean>> => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/members/username/duplication`, { username });
+    const response = await axios.post<ApiResponse<boolean>>(
+      `${API_BASE_URL}/members/username/duplication`, { username });
+
     return response.data;
   } catch (error) {
     throw new Error("아이디 중복 확인 중 오류가 발생했습니다.");
@@ -155,9 +168,11 @@ export const checkUsernameAvailability = async (username: string): Promise<ApiRe
 
 export const checkNicknameAvailability = async (nickname: string): Promise<ApiResponse<boolean>> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/members/nickname/duplication`, {
+    const response = await axios.get<ApiResponse<boolean>>(
+      `${API_BASE_URL}/members/nickname/duplication`, {
       params: { nickname }
     });
+
     return response.data;
   } catch (error) {
     throw new Error("닉네임 중복 확인 중 오류가 발생했습니다.");
@@ -171,10 +186,10 @@ export const updateAdditionalInfo = async(additionalInfoDto: AdditionalInfoDto, 
       additionalInfoDto,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
-      }
-    );
+      });
+      
     return response.data;
   } catch (error) {
     throw new Error("추가 정보 입력 중 오류가 발생했습니다.");
