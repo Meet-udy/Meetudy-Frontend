@@ -9,3 +9,11 @@ export const transformStudyGroupData = (studyGroup: StudyGroupDto) => {
     location: locationMapping[studyGroup.location] || studyGroup.location,
   };
 };
+
+export const transformStudyGroupFromResult = (studyGroupResult: StudyGroupDto) => {
+  return {
+    ...studyGroupResult,  
+    category: categoryMapping[studyGroupResult.category] || studyGroupResult.category,  
+    location: locationMapping[studyGroupResult.location] || studyGroupResult.location, 
+  };
+};
