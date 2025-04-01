@@ -4,7 +4,7 @@ import { transformStudyGroupData, transformStudyGroupFromResult } from "../utils
 const API_BASE_URL = "http://localhost:8080"; 
 
 export interface StudyGroupDto {
-  id: number
+  id?: number | null;
   category: string;
   name: string;
   description: string;
@@ -12,7 +12,6 @@ export interface StudyGroupDto {
   isOnline: boolean;
   location: string;
   maxParticipants: number;
-  method: string;
 }
 
 export interface ApiResponse<T> {
