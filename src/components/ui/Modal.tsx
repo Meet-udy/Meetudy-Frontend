@@ -5,10 +5,12 @@ interface ModalProps {
   message: string;
   onClose: () => void;
   onConfirmHome: () => void;
-  onConfirmLogin: () => void;
+  onConfirmLogin?: () => void;
+  onConfirmStudyGroup?: () => void; 
+  type: "signup" | "studyGroup";
 }
 
-const Modal: React.FC<ModalProps> = ({ message, onClose, onConfirmHome, onConfirmLogin }) => {
+const Modal: React.FC<ModalProps> = ({ message, onClose, onConfirmHome, onConfirmLogin, onConfirmStudyGroup, type }) => {
   return (
     <ModalOverlay>
       <ModalContent>
@@ -20,8 +22,17 @@ const Modal: React.FC<ModalProps> = ({ message, onClose, onConfirmHome, onConfir
           <p>{message}</p>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onConfirmHome}>홈 화면으로 이동하기</Button>
-          <Button onClick={onConfirmLogin}>로그인 하러 가기</Button>
+          {type === "signup" ? (
+            <>
+              <Button onClick={onConfirmHome}>홈 화면으로 이동하기</Button>
+              <Button onClick={onConfirmLogin}>로그인 하러 가기</Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={onConfirmHome}>홈 화면으로 이동하기</Button>
+              <Button onClick={onConfirmStudyGroup}>스터디 그룹 페이지로 이동하기</Button>
+            </>
+          )}
         </ModalFooter>
       </ModalContent>
     </ModalOverlay>
