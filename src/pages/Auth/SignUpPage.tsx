@@ -351,6 +351,7 @@ const SignUpPage: React.FC = () => {
           onClose={handleCloseModal}
           onConfirmHome={handleGoHome}
           onConfirmLogin={handleGoLogin}
+          type="signup"
         />
       )}
     </div>
