@@ -98,7 +98,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     top: "40px",
     left: "0",
     width: "100%",
-    backgroundColor: "hsla(210, 72.80%, 44.70%, 0.41)",
+    backgroundColor: "hsla(210, 87.40%, 43.70%, 0.20)",
     borderRadius: "5px",
     boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
   },
