@@ -8,7 +8,6 @@ interface StudyGroupDetailModalProps {
     description: string;
     duration: string;
     location: string;
-    method: string;
     maxParticipants: number;
   };
   onClose: () => void;
@@ -75,11 +74,6 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({ studyGrou
           <InfoBox>
             <InfoLabel>Location</InfoLabel>
             <InfoContent>{studyGroup.location}</InfoContent>
-          </InfoBox>
-
-          <InfoBox>
-            <InfoLabel>Learning Approach</InfoLabel>
-            <InfoContent>{studyGroup.method}</InfoContent>
           </InfoBox>
 
           <InfoBox>

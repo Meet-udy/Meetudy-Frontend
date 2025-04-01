@@ -1,0 +1,93 @@
+.createStudyGroupPage {
+  width: 400px;
+  margin-left:350px;
+  text-align: center;
+}
+  
+.createStudyGroupPage .title {
+  color: #1f72c5;
+  font-size: 30px;
+  margin-bottom: 60px;
+  margin-top: 100px;
+  margin-left: -370px;
+}
+  
+.createStudyGroupPage .error {
+  color: red;
+  font-size: 12px;
+  margin-top: 20px;
+}
+  
+.createStudyGroupPage .formGroup {
+  margin-bottom: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  margin-left: -100px;
+}
+  
+.createStudyGroupPage .label {
+  margin-bottom: 10px;
+}
+  
+.createStudyGroupPage .radioGroup,
+.createStudyGroupPage .buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; 
+  margin-bottom: 10px;
+  gap: 1px;
+}
+  
+.createStudyGroupPage .radioGroup label,
+.createStudyGroupPage .buttonGroup label {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+  
+.createStudyGroupPage .radioGroup input,
+.createStudyGroupPage .buttonGroup input {
+  margin-right: 10px;
+}
+  
+.createStudyGroupPage .buttonGroup {
+  gap: 3px;
+}
+  
+.createStudyGroupPage .inputField {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+   margin-top: 1px;
+}
+  
+.createStudyGroupPage .inputField.error {
+  border: 2px solid red;
+}
+  
+.createStudyGroupPage .submitButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #1f72c5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 40px;
+}
+  
+.createStudyGroupPage .submitButton:hover {
+  background-color: #155a8a;
+}
+
+.createStudyGroupPage .formGroup.datePickerGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}

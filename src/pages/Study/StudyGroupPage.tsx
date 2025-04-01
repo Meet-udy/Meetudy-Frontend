@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import StudyGroupDetailModal from "../../components/ui/StudyGroupDetailModal.tsx";
+import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import { getSortedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
@@ -15,7 +15,6 @@ interface StudyGroupDetail {
   isOnline: boolean;
   location: string;
   maxParticipants: number;
-  method: string;
 }
 
 export const StudyGroupPage: React.FC = () => {
@@ -46,7 +45,11 @@ export const StudyGroupPage: React.FC = () => {
   }, [accessToken, sortBy]);
 
   const handleCardClick = async (groupId: number) => {
-    console.log("Clicked group ID:", groupId);
+    if (groupId === null || groupId === undefined) {
+      setErrors({ general: "잘못된 그룹 ID입니다." });
+      return;
+    }
+
     try {
       const groupDetail = await getStudyGroupById(groupId);
       setSelectedGroup(groupDetail);
@@ -66,7 +69,11 @@ export const StudyGroupPage: React.FC = () => {
             <div
               key={group.name}
               className="study-group-card"
-              onClick={() => handleCardClick(group.id)}
+              onClick={() => {
+                if (group.id != null) {  
+                  handleCardClick(group.id);
+                }
+              }}
             >
               <h3>{group.name}</h3>
               <img 
