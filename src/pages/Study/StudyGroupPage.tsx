@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import { Header } from "../../components/layout/Header.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
+import SortDropdown, { SortType } from "../../components/studyGroup/SortDroupdown.tsx";
 import { getSortedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
@@ -19,8 +20,8 @@ interface StudyGroupDetail {
 
 export const StudyGroupPage: React.FC = () => {
   const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
-  const [sortBy, setSortBy] = useState<string>("LATEST");
-  const { isModalOpen, setIsModalOpen, modalMessage, setModalMessage, handleCloseModal } = useModal();
+  const [sortBy, setSortBy] = useState<SortType>("LATEST");
+  const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
   const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
   const [errors, setErrors] = useState<any>({});
 
@@ -53,7 +54,7 @@ export const StudyGroupPage: React.FC = () => {
     try {
       const groupDetail = await getStudyGroupById(groupId);
       setSelectedGroup(groupDetail);
-      setIsModalOpen(true); 
+    setIsModalOpen(true);
     } catch (error) {
       setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
     }
@@ -64,6 +65,9 @@ export const StudyGroupPage: React.FC = () => {
       <Header />
       <div className="study-group-content">
         <StudyGroupSidebar />
+        <div className="sort-dropdown-container">
+            <SortDropdown sortBy={sortBy} onSortChange={setSortBy} />
+          </div>
         <div className="study-group-list">
           {studyGroups.map((group) => (
             <div
@@ -86,7 +90,7 @@ export const StudyGroupPage: React.FC = () => {
                 <span className="tag">#{group.duration}</span>
                 <span className="tag">#{group.isOnline ? "온라인" : "오프라인"}</span>
                 <span className="tag">#{group.location}</span>
-              </div>
+          </div>
             </div>
           ))}
         </div>
