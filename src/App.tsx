@@ -8,6 +8,8 @@ import KakaoRedirectHandler from "./pages/Auth/KakaoRedirectHandler.tsx";
 import AdditionalInfoPage from "./pages/Auth/AdditionalInfoPage.tsx";
 import StudyGroupPage from "./pages/Study/StudyGroupPage.tsx";
 import CreateStudyGroupPage from "./pages/Study/CreateStudyGroupPage.tsx"
+import LeaderStudyGroupPage from "./pages/Study/LeaderStudyGroupPage.tsx";
+import MemberStudyGroupPage from "./pages/Study/MemberStudyGroupPage.tsx";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/additional-info" element={<AdditionalInfoPage />} />
           <Route path="/study-groups" element={<StudyGroupPage />} />
           <Route path="/study-groups/create" element={<CreateStudyGroupPage />} />
+          <Route path="/study-groups/leader" element={<LeaderStudyGroupPage />} />
+          <Route path="/study-groups/member" element={<MemberStudyGroupPage />} />
         </Routes>
       </div>
     </Router>
