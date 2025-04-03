@@ -117,7 +117,7 @@ const SignUpPage: React.FC = () => {
         setErrors({ general: response.message });
       }
     } catch (error) {
-      setErrors({ general: "회원가입 중 오류가 발생했습니다." });
+      setErrors({ general: "회원가입에 실패했습니다." });
     }
   };
 

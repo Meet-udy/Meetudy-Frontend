@@ -26,7 +26,6 @@ const OAuth2RedirectHandler: React.FC = () => {
           }
         })
         .catch(() => {
-          alert("카카오 로그인 중 오류가 발생했습니다.");
           navigate("/login");
         });
     }

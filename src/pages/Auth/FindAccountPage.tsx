@@ -24,7 +24,7 @@ const FindAccountPage = () => {
         setMessage('등록된 아이디가 없습니다.');
       }
     } catch (error) {
-      setMessage('아이디 찾기 중 오류가 발생했습니다.');
+      setMessage('아이디 찾기에 실패했습니다.');
     }
       setIsModalOpen(true);
   };
@@ -35,10 +35,10 @@ const FindAccountPage = () => {
       if (response.isSuccess) {
         setMessage('임시 비밀번호 전송이 완료되었습니다. 입력하신 이메일을 확인해 주세요.');
       } else {
-        setMessage('비밀번호 찾기 실패');
+        setMessage('비밀번호 찾기에 실패했습니다.');
       }
     } catch (error) {
-      setMessage('비밀번호 찾기 중 오류가 발생했습니다.');
+      setMessage('비밀번호 찾기에 실패했습니다.');
     }
       setIsModalOpen(true);
   };
@@ -124,6 +124,7 @@ const FindAccountPage = () => {
           onClose={handleCloseModal}
           onConfirmHome={handleGoHome}
           onConfirmLogin={handleGoLogin}
+          type="signup"
         />
       )}
     </div>
