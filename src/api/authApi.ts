@@ -54,7 +54,7 @@ export const signUp = async (signUpDto: SignUpDto) => {
 
     return response.data;
   } catch (error) {
-    throw new Error("회원가입 중 오류가 발생했습니다.");
+    throw new Error("회원가입에 실패했습니다.");
   }
 };
 
@@ -82,7 +82,7 @@ export const kakaoLogin = async (code: string): Promise<ApiResponse<KakaoLoginDt
 
     return response.data;
   } catch (error) {
-    throw new Error("카카오 로그인 중 오류 발생");
+    throw new Error("카카오 로그인에 실패했습니다.");
   }
 };
 
@@ -101,7 +101,7 @@ export const logout = async (accessToken: string): Promise<void> => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   } catch (error) {
-    console.error("로그아웃 중 오류가 발생했습니다.", error);
+    console.error("로그아웃에 실패했습니다.", error);
   }
 };
 
@@ -115,7 +115,7 @@ export const findUsername = async (email: string): Promise<ApiResponse<string>> 
     if (error.response) {
       return error.response.data;
     }
-    throw new Error("아이디 찾기 중 오류 발생");
+    throw new Error("아이디 찾기에 실패했습니다.");
   }
 };
 
@@ -129,7 +129,7 @@ export const findPassword = async (username: string, email: string): Promise<Api
     if (error.response) {
       return error.response.data;
     }
-    throw new Error("비밀번호 찾기 중 오류 발생");
+    throw new Error("비밀번호 찾기에 실패했습니다.");
   }
 };
 
@@ -151,7 +151,7 @@ export const verifyCode = async (email: string, code: string): Promise<ApiRespon
 
     return response.data;
   } catch (error) {
-    throw new Error("인증 번호 검증 중 오류가 발생했습니다.");
+    throw new Error("인증 번호 검증에 실패했습니다.");
   }
 };
 
@@ -162,7 +162,7 @@ export const checkUsernameAvailability = async (username: string): Promise<ApiRe
 
     return response.data;
   } catch (error) {
-    throw new Error("아이디 중복 확인 중 오류가 발생했습니다.");
+    throw new Error("아이디 중복 확인에 실패했습니다.");
   }
 };
 
@@ -175,7 +175,7 @@ export const checkNicknameAvailability = async (nickname: string): Promise<ApiRe
 
     return response.data;
   } catch (error) {
-    throw new Error("닉네임 중복 확인 중 오류가 발생했습니다.");
+    throw new Error("닉네임 중복 확인에 실패했습니다.");
   }
 };
 
@@ -192,6 +192,6 @@ export const updateAdditionalInfo = async(additionalInfoDto: AdditionalInfoDto, 
       
     return response.data;
   } catch (error) {
-    throw new Error("추가 정보 입력 중 오류가 발생했습니다.");
+    throw new Error("추가 정보 입력에 실패했습니다.");
   }
 };

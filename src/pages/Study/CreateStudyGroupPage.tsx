@@ -54,6 +54,8 @@ const StudyGroupForm = () => {
     try {
       const response = await createStudyGroup(accessToken, formData); 
       if (response.isSuccess) {
+        setModalMessage("스터디 그룹 생성이 완료되었습니다.");
+        setIsModalOpen(true);
         setFormData({
           category: "",
           name: "",
@@ -64,7 +66,7 @@ const StudyGroupForm = () => {
           isOnline: false,
         });
       } else {
-        setErrorMessage(response.message || "스터디 그룹 생성 실패");
+        setErrorMessage(response.message || "스터디 그룹 생성에 실패했습니다.");
       }
     } catch (error) {
       setErrorMessage("스터디 그룹 생성에 실패했습니다.");
@@ -163,7 +165,7 @@ const StudyGroupForm = () => {
           onClose={handleCloseModal}
           onConfirmHome={handleGoHome}
           onConfirmLogin={handleGoLogin}
-          type="signup"
+          type="studyGroup"
         />
       )}
     </div>
