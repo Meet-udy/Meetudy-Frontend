@@ -24,15 +24,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
 
   const datePickerContainerStyle: React.CSSProperties = {
     display: "flex",
-    flexDirection: "row",  // 가로로 배치
-    alignItems: "center",  // 세로 정렬
-    justifyContent: "center", // 가로로 중앙 정렬
+    flexDirection: "row",  
+    alignItems: "center",  
+    justifyContent: "center", 
     marginTop: "3px",
     marginBottom: "7px",
     marginLeft: "-3px"
   };
   
-
   const dateInputStyle = {
     padding: "8px",
     margin: "0 4px",
@@ -41,16 +40,15 @@ const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
   const submitButtonStyle = {
     border: '1px solid #ccc',
     borderRadius: '5px',
-
     backgroundColor: "white",
     color: '#1f72c5',
     padding: "8px 12px",
-  fontSize: "14px",
-  cursor: "pointer",
-  width: "auto",  // 내용 크기에 맞게 조절
-  display: "inline-block", // 부모 flex 컨테이너에서 크기 강제 확장 방지
-  whiteSpace: "nowrap",
-  marginLeft: "15px"
+    fontSize: "14px",
+    cursor: "pointer",
+    width: "auto", 
+    display: "inline-block", 
+    whiteSpace: "nowrap",
+    marginLeft: "15px"
   };
 
   return (
