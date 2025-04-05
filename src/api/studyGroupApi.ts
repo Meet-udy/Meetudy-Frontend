@@ -95,3 +95,21 @@ export const getJoinedStudyGroups = async (accessToken: string) => {
     throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
+
+export const requestJoinGroup = async (accessToken: string, groupId: number) => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/study-groups/${groupId}/join-requests`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw new Error("스터디 그룹 가입 요청에 실패했습니다.");
+  }
+};
