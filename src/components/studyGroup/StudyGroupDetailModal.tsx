@@ -10,10 +10,17 @@ interface StudyGroupDetailModalProps {
     location: string;
     maxParticipants: number;
   };
+  groupId?: number;
+  onJoin?: (groupId: number) => void;
   onClose: () => void;
 }
 
-const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({ studyGroup, onClose }) => {
+const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
+  studyGroup,
+  groupId,
+  onJoin,
+  onClose,
+}) => {
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -80,6 +87,20 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({ studyGrou
             <InfoLabel>Max Participants</InfoLabel>
             <InfoContent>{studyGroup.maxParticipants}명</InfoContent>
           </InfoBox>
+
+          <ModalFooter>
+            <FooterButton>질문 채팅방</FooterButton>
+            <FooterButton
+              onClick={() => {
+                if (onJoin && groupId !== undefined) {
+                  onJoin(groupId);
+                }
+              }}
+            >
+              가입하기
+            </FooterButton>
+
+          </ModalFooter>
         </ModalBody>
       </ModalContent>
     </ModalOverlay>
@@ -171,4 +192,29 @@ const InfoContent = styled.div`
   font-size: 18px;
   margin-top: 20px;
   color: #333;
+`;
+
+const ModalFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 30px;
+  padding: 0 20px;
+`;
+
+const FooterButton = styled.button`
+  flex: 1;
+  padding: 12px 16px;
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #1f72c5;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
