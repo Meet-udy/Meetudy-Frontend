@@ -5,6 +5,7 @@ export const StudyGroupSidebar: React.FC = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const handleAllGroupsClick = () => navigate("/study-groups");
   const handleCreateGroupClick = () => navigate("/study-groups/create");
   const handleLeaderClick = () => navigate("/study-groups/leader");
   const handleMemberClick = () => navigate("/study-groups/member");
@@ -14,7 +15,12 @@ export const StudyGroupSidebar: React.FC = () => {
 
   return (
     <aside style={styles.sidebar}>
-      <h2 style={styles.title}>STUDY GROUP <div style={styles.titleUnderline} /></h2>
+      <h2 style={styles.title}>
+        STUDY GROUP <div style={styles.titleUnderline} />
+      </h2>
+      <button style={styles.button} onClick={handleAllGroupsClick}>
+        전체 그룹
+      </button>
       <button style={styles.button} onClick={handleCreateGroupClick}>
         그룹 생성
       </button>
@@ -42,7 +48,7 @@ export const StudyGroupSidebar: React.FC = () => {
 const styles: { [key: string]: React.CSSProperties } = {
   sidebar: {
     width: "200px",
-    height: "30vh",
+    height: "35vh",
     backgroundColor: "white",
     border: "2px solid hsla(210, 72.80%, 44.70%, 0.28)",
     borderRadius: "5px",
