@@ -3,12 +3,13 @@ import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import { Header } from "../../components/layout/Header.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import SortDropdown, { SortType } from "../../components/studyGroup/SortDroupdown.tsx";
-import { getSortedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
+import { getSortedStudyGroups, getStudyGroupById, requestJoinGroup } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import './StudyGroupPage.css';
 
 interface StudyGroupDetail {
+  id?: number | null;
   category: string;
   name: string;
   description: string;
@@ -54,9 +55,24 @@ export const StudyGroupPage: React.FC = () => {
     try {
       const groupDetail = await getStudyGroupById(groupId);
       setSelectedGroup(groupDetail);
-    setIsModalOpen(true);
+      setIsModalOpen(true);
     } catch (error) {
       setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
+    }
+  };
+
+  const handleJoinGroup = async (groupId: number) => {
+    if (!accessToken) {
+      setErrors({ general: "사용자 토큰이 필요합니다." });
+      return;
+    }
+
+    try {
+      const response = await requestJoinGroup(accessToken, groupId);
+      alert("가입 요청이 성공적으로 전송되었습니다.");
+      handleCloseModal(); 
+    } catch (error) {
+      setErrors({ general: "스터디 그룹 가입 요청에 실패했습니다." });
     }
   };
 
@@ -96,12 +112,15 @@ export const StudyGroupPage: React.FC = () => {
         </div>
       </div>
 
-      {isModalOpen && selectedGroup && (
+      {isModalOpen && selectedGroup && selectedGroup.id != null && (
         <StudyGroupDetailModal 
           studyGroup={selectedGroup}
+          groupId={selectedGroup.id}
+          onJoin={handleJoinGroup}
           onClose={handleCloseModal}
         />
       )}
+
     </div>
   );
 };
