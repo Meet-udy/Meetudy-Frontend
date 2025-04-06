@@ -17,3 +17,7 @@ export const transformStudyGroupFromResult = (studyGroupResult: StudyGroupDto) =
     location: locationMapping[studyGroupResult.location] || studyGroupResult.location, 
   };
 };
+
+export const transformCategoryToKorean = (category: string): string => {
+  return categoryMapping[category] || category;
+};

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
+import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
 import { getCreatedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
@@ -21,6 +22,8 @@ export const LeaderStudyGroupPage: React.FC = () => {
     const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
     const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
     const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
+    const [memberModalOpen, setMemberModalOpen] = useState(false); // ✅ 멤버 모달 상태
+  const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); // ✅ 멤버용 ID
     const [errors, setErrors] = useState<any>({});
   
 
@@ -59,6 +62,11 @@ export const LeaderStudyGroupPage: React.FC = () => {
     }
   };
 
+  const handleMemberClick = (groupId: number) => {
+    setSelectedGroupIdForMember(groupId);
+    setMemberModalOpen(true);
+  };
+
   return (
     <div className="study-group-page">
       <Header />
@@ -78,7 +86,12 @@ export const LeaderStudyGroupPage: React.FC = () => {
               />
               <div className="study-group-actions">
                 <button className="study-group-btn">그룹 채팅방</button>
-                <button className="study-group-btn">멤버 관리</button>
+                <button
+                  className="study-group-btn"
+                  onClick={() => group.id != null && handleMemberClick(group.id)} // ✅ 멤버 모달 오픈
+                >
+                  멤버 관리
+                </button>
               </div>
             </div>
           ))}
@@ -89,6 +102,17 @@ export const LeaderStudyGroupPage: React.FC = () => {
         <StudyGroupDetailModal 
           studyGroup={selectedGroup}
           onClose={handleCloseModal}
+        />
+      )}
+
+      {memberModalOpen && selectedGroupIdForMember !== null && accessToken && (
+        <StudyGroupMemberModal
+          groupId={selectedGroupIdForMember}
+          accessToken={accessToken}
+          onClose={() => {
+            setMemberModalOpen(false);
+            setSelectedGroupIdForMember(null);
+          }}
         />
       )}
     </div>

@@ -14,6 +14,15 @@ export interface StudyGroupDto {
   maxParticipants: number;
 }
 
+export interface StudyGroupMemberDto {
+  groupMemberId?: number;
+  nickname: string;
+  major: string;
+  introduction: string;
+  activityScore: number;
+  interests: string[]; 
+}
+
 export interface ApiResponse<T> {
   isSuccess: boolean;
   code: string;
@@ -111,5 +120,82 @@ export const requestJoinGroup = async (accessToken: string, groupId: number) => 
     return response.data;
   } catch (error) {
     throw new Error("스터디 그룹 가입 요청에 실패했습니다.");
+  }
+};
+
+export const getMembersByStatus = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/study-groups/joined-groups`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    return response.data.result.map(transformStudyGroupData);
+  } catch (error) {
+    throw new Error("스터디 그룹을 조회할 수 없습니다.");
+  }
+};
+
+export const getStudyGroupMembers = async (
+  accessToken: string,
+  groupId: number,
+  status: string
+): Promise<StudyGroupMemberDto[]> => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/study-groups/${groupId}/members`,
+      {
+        params: { status },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.result || [];
+  } catch (error) {
+    throw new Error("스터디 그룹 멤버 조회에 실패했습니다.");
+  }
+};
+
+export const approveJoinRequest = async (
+  accessToken: string,
+  groupMemberId: number
+): Promise<void> => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/study-groups/${groupMemberId}/approval`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.result || [];
+  } catch (error) {
+    throw new Error("스터디 가입 승인에 실패했습니다.");
+  }
+};
+
+export const rejectJoinRequest = async (
+  accessToken: string,
+  groupMemberId: number
+): Promise<void> => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/study-groups/${groupMemberId}/rejection`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(response.data.result)
+    return response.data.result || [];
+  } catch (error) {
+    throw new Error("스터디 가입 거절에 실패했습니다.");
   }
 };
