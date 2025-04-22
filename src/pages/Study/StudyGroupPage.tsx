@@ -118,6 +118,7 @@ export const StudyGroupPage: React.FC = () => {
           groupId={selectedGroup.id}
           onJoin={handleJoinGroup}
           onClose={handleCloseModal}
+          sourcePage="StudyGroupPage"
         />
       )}
 

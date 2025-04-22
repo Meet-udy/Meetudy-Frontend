@@ -162,7 +162,7 @@ export const getStudyGroupMembers = async (
 export const approveJoinRequest = async (
   accessToken: string,
   groupMemberId: number
-): Promise<void> => {
+): Promise<string> => {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/study-groups/${groupMemberId}/approval`,
@@ -182,7 +182,7 @@ export const approveJoinRequest = async (
 export const rejectJoinRequest = async (
   accessToken: string,
   groupMemberId: number
-): Promise<void> => {
+): Promise<string> => {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/study-groups/${groupMemberId}/rejection`,
@@ -193,9 +193,67 @@ export const rejectJoinRequest = async (
         },
       }
     );
-    console.log(response.data.result)
     return response.data.result || [];
   } catch (error) {
     throw new Error("스터디 가입 거절에 실패했습니다.");
+  }
+};
+
+export const closeRecruitment = async (
+  accessToken: string,
+  groupId: number
+): Promise<string> => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/study-groups/${groupId}/closure`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.result || [];
+  } catch (error) {
+    throw new Error("스터디 멤버 모집 종료에 실패했습니다.");
+  }
+};
+
+export const removeMemberFromGroup = async (
+  accessToken: string,
+  groupId: number,
+  groupMemberId: number
+): Promise<string> => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/study-groups/${groupId}/member/${groupMemberId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.result || "멤버가 성공적으로 탈퇴되었습니다.";
+  } catch (error) {
+    throw new Error("스터디 멤버 탈퇴에 실패했습니다.");
+  }
+};
+
+export const leaveStudyGroup = async (
+  accessToken: string,
+  groupId: number
+): Promise<string> => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/study-groups/${groupId}/member`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.result || "멤버가 성공적으로 탈퇴되었습니다.";
+  } catch (error) {
+    throw new Error("스터디 멤버 탈퇴에 실패했습니다.");
   }
 };

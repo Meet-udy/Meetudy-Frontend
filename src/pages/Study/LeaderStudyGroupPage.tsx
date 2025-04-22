@@ -3,7 +3,7 @@ import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import { getCreatedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
+import { getCreatedStudyGroups, getStudyGroupById, closeRecruitment } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
@@ -19,13 +19,13 @@ interface StudyGroupDetail {
 }
 
 export const LeaderStudyGroupPage: React.FC = () => {
-    const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
-    const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
-    const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
-    const [memberModalOpen, setMemberModalOpen] = useState(false); // ✅ 멤버 모달 상태
-  const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); // ✅ 멤버용 ID
-    const [errors, setErrors] = useState<any>({});
-  
+  const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
+  const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
+  const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
+  const [memberModalOpen, setMemberModalOpen] = useState(false); 
+  const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); 
+  const [closedGroups, setClosedGroups] = useState<number[]>([]);
+  const [errors, setErrors] = useState<any>({});
 
   const accessToken: string | null = localStorage.getItem("accessToken");
 
@@ -56,7 +56,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
     try {
       const groupDetail = await getStudyGroupById(groupId);
       setSelectedGroup(groupDetail);
-    setIsModalOpen(true);
+      setIsModalOpen(true);
     } catch (error) {
       setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
     }
@@ -66,6 +66,17 @@ export const LeaderStudyGroupPage: React.FC = () => {
     setSelectedGroupIdForMember(groupId);
     setMemberModalOpen(true);
   };
+
+  const handleCloseRecruitment = async (groupId: number) => {
+    if (!accessToken) return;
+  
+    try {
+      await closeRecruitment(accessToken, groupId);
+      setClosedGroups((prev) => [...prev, groupId]);
+    } catch (error) {
+      alert("인원 모집 종료에 실패했습니다.");
+    }
+  };  
 
   return (
     <div className="study-group-page">
@@ -88,10 +99,18 @@ export const LeaderStudyGroupPage: React.FC = () => {
                 <button className="study-group-btn">그룹 채팅방</button>
                 <button
                   className="study-group-btn"
-                  onClick={() => group.id != null && handleMemberClick(group.id)} // ✅ 멤버 모달 오픈
+                  onClick={() => group.id != null && handleMemberClick(group.id)} 
                 >
                   멤버 관리
                 </button>
+                {typeof group.id === 'number' && !closedGroups.includes(group.id) && (
+                  <button
+                    className="study-group-btn"
+                    onClick={() => handleCloseRecruitment(group.id as number)}
+                  >
+                    인원 모집 완료
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -102,6 +121,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
         <StudyGroupDetailModal 
           studyGroup={selectedGroup}
           onClose={handleCloseModal}
+          sourcePage="LeaderStudyGroupPage"
         />
       )}
 
