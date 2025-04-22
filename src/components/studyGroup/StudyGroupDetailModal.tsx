@@ -13,6 +13,7 @@ interface StudyGroupDetailModalProps {
   groupId?: number;
   onJoin?: (groupId: number) => void;
   onClose: () => void;
+  sourcePage: "StudyGroupPage" | "LeaderStudyGroupPage" | "MemberStudyGroupPage";
 }
 
 const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
@@ -20,6 +21,7 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
   groupId,
   onJoin,
   onClose,
+  sourcePage
 }) => {
 
   const [isDragging, setIsDragging] = useState(false);
@@ -88,19 +90,21 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
             <InfoContent>{studyGroup.maxParticipants}명</InfoContent>
           </InfoBox>
 
-          <ModalFooter>
-            <FooterButton>질문 채팅방</FooterButton>
-            <FooterButton
-              onClick={() => {
-                if (onJoin && groupId !== undefined) {
-                  onJoin(groupId);
-                }
-              }}
-            >
-              가입하기
-            </FooterButton>
+          {sourcePage === "StudyGroupPage" && (
+            <ModalFooter>
+              <FooterButton>질문 채팅방</FooterButton>
+              <FooterButton
+                onClick={() => {
+                  if (onJoin && groupId !== undefined) {
+                    onJoin(groupId);
+                  }   
+                }}
+              >
+                가입하기
+              </FooterButton>
+            </ModalFooter>
+          )}
 
-          </ModalFooter>
         </ModalBody>
       </ModalContent>
     </ModalOverlay>
