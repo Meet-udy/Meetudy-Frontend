@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import { getJoinedStudyGroups, getStudyGroupById } from "../../api/studyGroupApi.ts";
+import { getJoinedStudyGroups, getStudyGroupById, leaveStudyGroup } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
@@ -18,12 +18,10 @@ interface StudyGroupDetail {
 }
 
 export const MemberStudyGroupPage: React.FC = () => {
-    const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
-    const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
-    const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
-    const [errors, setErrors] = useState<any>({});
-  
-
+  const [studyGroups, setStudyGroups] = useState<StudyGroupDto[]>([]);
+  const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
+  const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
+  const [errors, setErrors] = useState<any>({});
   const accessToken: string | null = localStorage.getItem("accessToken");
 
   useEffect(() => {
@@ -53,11 +51,32 @@ export const MemberStudyGroupPage: React.FC = () => {
     try {
       const groupDetail = await getStudyGroupById(groupId);
       setSelectedGroup(groupDetail);
-    setIsModalOpen(true);
+      setIsModalOpen(true);
     } catch (error) {
       setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
     }
   };
+
+  const handleLeaveGroup = async (groupId?: number) => {
+    if (!accessToken) {
+      setErrors({ general: "사용자 토큰이 필요합니다." });
+      return;
+    }
+    if (!groupId) {
+      setErrors({ general: "잘못된 그룹 ID입니다." });
+      return;
+    }
+    if (!window.confirm("정말로 스터디를 탈퇴하시겠습니까?")) return;
+
+    try {
+      await leaveStudyGroup(accessToken, groupId);
+      const updatedGroups = await getJoinedStudyGroups(accessToken);
+      setStudyGroups(updatedGroups);
+      alert("스터디 그룹에서 탈퇴했습니다.");
+      } catch (error) {
+        console.error("멤버 탈퇴에 실패했습니다.", error);
+      }
+    };
 
   return (
     <div className="study-group-page">
@@ -78,6 +97,12 @@ export const MemberStudyGroupPage: React.FC = () => {
               />
               <div className="study-group-actions">
                 <button className="study-group-btn">그룹 채팅방</button>
+                <button
+                  className="study-group-btn leave-btn"
+                  onClick={() => group.id != null && handleLeaveGroup(group.id)}
+                >
+                  그룹 탈퇴
+                </button>
               </div>
             </div>
           ))}
@@ -88,6 +113,7 @@ export const MemberStudyGroupPage: React.FC = () => {
         <StudyGroupDetailModal 
           studyGroup={selectedGroup}
           onClose={handleCloseModal}
+          sourcePage="MemberStudyGroupPage"
         />
       )}
     </div>
