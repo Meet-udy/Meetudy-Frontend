@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getStudyGroupMembers, approveJoinRequest, rejectJoinRequest, StudyGroupMemberDto } from "../../api/studyGroupApi.ts";
+import { getStudyGroupMembers, approveJoinRequest, rejectJoinRequest, removeMemberFromGroup, StudyGroupMemberDto } from "../../api/studyGroupApi.ts";
 import { transformCategoryToKorean } from "../../utils/studyGroupUtils.ts";
 
 interface StudyGroupMemberModalProps {
@@ -47,6 +47,17 @@ const StudyGroupMemberModal: React.FC<StudyGroupMemberModalProps> = ({
       fetchMembers(); 
     } catch (error) {
       console.error("가입 거절에 실패했습니다.", error);
+    }
+  };
+
+  const handleRemoveMember = async (groupMemberId?: number) => {
+    if (!groupMemberId) return;
+    if (!window.confirm("정말로 해당 멤버를 탈퇴시키겠습니까?")) return;
+    try {
+      await removeMemberFromGroup(accessToken, groupId, groupMemberId);
+      fetchMembers(); 
+    } catch (error) {
+      console.error("멤버 탈퇴에 실패했습니다.", error);
     }
   };
 
@@ -106,6 +117,16 @@ const StudyGroupMemberModal: React.FC<StudyGroupMemberModalProps> = ({
                       onClick={() => handleReject(member.groupMemberId)}
                     >
                       거절
+                    </button>
+                  </div>
+                )}
+                {activeTab === "MEMBER" && (
+                  <div style={styles.actionButtons}>
+                    <button
+                      style={styles.rejectButton}
+                      onClick={() => handleRemoveMember(member.groupMemberId)}
+                    >
+                      멤버 탈퇴
                     </button>
                   </div>
                 )}
