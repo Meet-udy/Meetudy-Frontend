@@ -92,7 +92,7 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
 
           {sourcePage === "StudyGroupPage" && (
             <ModalFooter>
-              <FooterButton>질문 채팅방</FooterButton>
+              <FooterButton>질문 채팅방 생성</FooterButton>
               <FooterButton
                 onClick={() => {
                   if (onJoin && groupId !== undefined) {

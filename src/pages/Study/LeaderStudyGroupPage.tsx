@@ -5,6 +5,7 @@ import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.
 import { Header } from "../../components/layout/Header.tsx";
 import { getCreatedStudyGroups, getStudyGroupById, closeRecruitment } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
+import { createGroupChatRoom } from "../../api/chatApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
 
@@ -26,6 +27,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
   const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); 
   const [closedGroups, setClosedGroups] = useState<number[]>([]);
   const [errors, setErrors] = useState<any>({});
+  const [createdChatRoom, setCreatedChatRoom] = useState<number | null>(null);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
 
@@ -78,6 +80,21 @@ export const LeaderStudyGroupPage: React.FC = () => {
     }
   };  
 
+  const handleCreateChatRoom = async (groupId: number) => {
+    if (!accessToken) {
+      alert("로그인 후 채팅방을 생성할 수 있습니다.");
+      return;
+    }
+
+    try {
+      const result = await createGroupChatRoom(accessToken, groupId);
+      setCreatedChatRoom(groupId); 
+      alert(`채팅방이 생성되었습니다.`);
+    } catch (error) {
+      alert("채팅방 생성에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="study-group-page">
       <Header />
@@ -96,13 +113,21 @@ export const LeaderStudyGroupPage: React.FC = () => {
                 className="study-group-image" 
               />
               <div className="study-group-actions">
-                <button className="study-group-btn">그룹 채팅방</button>
+                {createdChatRoom !== group.id && ( 
+                  <button 
+                  className="study-group-btn" 
+                  onClick={() => group.id != null && handleCreateChatRoom(group.id)}
+                >
+                  그룹 채팅방 생성
+                </button>                
+                )}
                 <button
                   className="study-group-btn"
                   onClick={() => group.id != null && handleMemberClick(group.id)} 
                 >
                   멤버 관리
                 </button>
+
                 {typeof group.id === 'number' && !closedGroups.includes(group.id) && (
                   <button
                     className="study-group-btn"
