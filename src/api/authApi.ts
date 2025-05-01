@@ -195,3 +195,18 @@ export const updateAdditionalInfo = async(additionalInfoDto: AdditionalInfoDto, 
     throw new Error("추가 정보 입력에 실패했습니다.");
   }
 };
+
+export const getCurrentMemberId = async (accessToken: string): Promise<number> => {
+  const response = await axios.get<ApiResponse<number>>(
+    `${API_BASE_URL}/members/me`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  if (response.data.result === undefined || response.data.result === null) {
+    throw new Error('회원 정보를 가져올 수 없습니다.');
+  }
+  return response.data.result;
+};

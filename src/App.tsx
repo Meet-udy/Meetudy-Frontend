@@ -11,6 +11,7 @@ import CreateStudyGroupPage from "./pages/Study/CreateStudyGroupPage.tsx"
 import LeaderStudyGroupPage from "./pages/Study/LeaderStudyGroupPage.tsx";
 import MemberStudyGroupPage from "./pages/Study/MemberStudyGroupPage.tsx";
 import ChatRoomListPage from "./pages/Chat/ChatRoomListPage.tsx";
+import ChatRoomPage from "./pages/Chat/ChatRoomPage.tsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/study-groups/leader" element={<LeaderStudyGroupPage />} />
           <Route path="/study-groups/member" element={<MemberStudyGroupPage />} />
           <Route path="/chat-rooms" element={<ChatRoomListPage />} />
+          <Route path="/chat/:roomId" element={<ChatRoomPage />} />
         </Routes>
       </div>
     </Router>
