@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Client, Stomp } from '@stomp/stompjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useParams } from 'react-router-dom';
-import { getMessages, getChatRooms, ChatMessageDto, ChatResponseDto } from '../../api/chatApi.ts';
+import { getMessages, getChatRooms, leaveChatRoom, ChatMessageDto, ChatResponseDto } from '../../api/chatApi.ts';
 import { getCurrentMemberId } from '../../api/authApi.ts';
 import { Header } from '../../components/layout/Header.tsx';
 
@@ -18,6 +20,7 @@ const ChatRoomPage: React.FC = () => {
   const [groupName, setGroupName] = useState<string>('');
   const accessToken = localStorage.getItem('accessToken');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
   
   useEffect(() => {
     if (!accessToken || !roomId) return;
@@ -102,6 +105,16 @@ const ChatRoomPage: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const handleLeaveRoom = async () => {
+    if (!accessToken || !roomId) return;
+    try {
+      await leaveChatRoom(accessToken, Number(roomId));
+      window.location.href = '/chat-rooms';
+    } catch (error) {
+      console.error('채팅방 나가기 실패', error);
+    }
+  };
   
   return (
     <div className="chat-room-page">
@@ -110,6 +123,14 @@ const ChatRoomPage: React.FC = () => {
       <hr className="divider" />
       <div className="room-info">
         <h2 className="room-name">{groupName}</h2>
+        <div className="menu-icon" onClick={() => setShowMenu((prev) => !prev)}>
+        <FontAwesomeIcon icon={faBars} style={{color: "#3c6796",}} size='lg' />
+          {showMenu && (
+            <div className="menu-popup">
+              <button onClick={handleLeaveRoom}>채팅방 나가기</button>
+            </div>
+          )}
+        </div>
       </div>
       <hr className="divider" />
       <div className="chat-container">
