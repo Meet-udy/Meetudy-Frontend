@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.tsx";
@@ -27,11 +29,16 @@ export const LeaderStudyGroupPage: React.FC = () => {
   const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); 
   const [closedGroups, setClosedGroups] = useState<number[]>([]);
   const [errors, setErrors] = useState<any>({});
-  const [createdChatRoom, setCreatedChatRoom] = useState<number | null>(null);
+  const [createdChatRooms, setCreatedChatRooms] = useState<number[]>([]);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
 
   useEffect(() => {
+    const storedChatRooms = JSON.parse(localStorage.getItem("createdChatRooms") || "[]");
+    if (Array.isArray(storedChatRooms)) {
+      setCreatedChatRooms(storedChatRooms);
+    }
+
     const fetchStudyGroups = async () => {
       if (!accessToken) {
         setErrors({ general: "사용자 토큰이 필요합니다." });
@@ -81,6 +88,11 @@ export const LeaderStudyGroupPage: React.FC = () => {
   };  
 
   const handleCreateChatRoom = async (groupId: number) => {
+    if (typeof groupId !== "number") {
+      alert("잘못된 그룹 ID입니다.");
+      return;
+    }
+
     if (!accessToken) {
       alert("로그인 후 채팅방을 생성할 수 있습니다.");
       return;
@@ -88,8 +100,9 @@ export const LeaderStudyGroupPage: React.FC = () => {
 
     try {
       const result = await createGroupChatRoom(accessToken, groupId);
-      setCreatedChatRoom(groupId); 
-      alert(`채팅방이 생성되었습니다.`);
+      setCreatedChatRooms((prev) => [...prev, groupId]);
+      localStorage.setItem("createdChatRooms", JSON.stringify([...createdChatRooms, groupId]));
+      alert("채팅방이 생성되었습니다.");
     } catch (error) {
       alert("채팅방 생성에 실패했습니다.");
     }
@@ -103,8 +116,11 @@ export const LeaderStudyGroupPage: React.FC = () => {
         <div className="study-group-list">
           {studyGroups.map((group) => (
             <div key={group.name} className="study-group-card">
-              <button className="info-btn" onClick={() => group.id != null && handleInfoClick(group.id)}>
-                ℹ️
+              <button 
+                className="info-btn" 
+                onClick={() => group.id != null && handleInfoClick(group.id)}
+              >
+                <FontAwesomeIcon icon={faCircleInfo} style={{ color: "#4a7dd3" }} />
               </button>
               <h3>{group.name}</h3>
               <img 
@@ -113,7 +129,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
                 className="study-group-image" 
               />
               <div className="study-group-actions">
-                {createdChatRoom !== group.id && ( 
+                {group.id != null && !createdChatRooms.includes(group.id) && (
                   <button 
                   className="study-group-btn" 
                   onClick={() => group.id != null && handleCreateChatRoom(group.id)}
