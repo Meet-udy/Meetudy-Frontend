@@ -82,3 +82,18 @@ export const getMessages = async (
   );
   return response.data.result;
 };
+
+export const leaveChatRoom = async (
+  accessToken: string,
+  roomId: number
+): Promise<string> => {
+  const response = await axios.delete(
+    `${API_BASE_URL}/chats/room/${roomId}`, 
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  return response.data.result;
+};
