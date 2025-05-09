@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
@@ -86,8 +88,11 @@ export const MemberStudyGroupPage: React.FC = () => {
         <div className="study-group-list">
           {studyGroups.map((group) => (
             <div key={group.name} className="study-group-card">
-              <button className="info-btn" onClick={() => group.id != null && handleInfoClick(group.id)}>
-                ℹ️
+              <button 
+                className="info-btn" 
+                onClick={() => group.id != null && handleInfoClick(group.id)}
+              >
+                <FontAwesomeIcon icon={faCircleInfo} style={{ color: "#4a7dd3" }} />
               </button>
               <h3>{group.name}</h3>
               <img 
