@@ -1,4 +1,5 @@
 import axios from "axios";
+import { authHeader, ApiResponse } from "./apiUtils.ts";
 
 const API_BASE_URL = "http://localhost:8080"; 
 
@@ -40,31 +41,26 @@ export interface AdditionalInfoDto {
   studyCategories: string[];
 }
 
-export interface ApiResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result?: T;
-}
-
-export const signUp = async (signUpDto: SignUpDto) => {
+export const signUp = async (
+  signUpDto: SignUpDto
+) => {
   try {
     const response = await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/members/sign-up`, signUpDto);
-
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("회원가입에 실패했습니다.");
   }
 };
 
-export const signIn = async (signInDto: SignInDto): Promise<ApiResponse<JwtTokenDto>> => {
+export const signIn = async (
+  signInDto: SignInDto
+): Promise<ApiResponse<JwtTokenDto>> => {
   try {
     const response = await axios.post<ApiResponse<JwtTokenDto>>(
       `${API_BASE_URL}/members/sign-in`, 
       signInDto
     );
-       
     return response.data;
   } catch (error: any) {
     if (error.response) {
@@ -74,42 +70,43 @@ export const signIn = async (signInDto: SignInDto): Promise<ApiResponse<JwtToken
   }
 };
 
-export const kakaoLogin = async (code: string): Promise<ApiResponse<KakaoLoginDto>> => {
+export const kakaoLogin = async (
+  code: string
+): Promise<ApiResponse<KakaoLoginDto>> => {
   try {
     const response = await axios.post<ApiResponse<KakaoLoginDto>>(
       `${API_BASE_URL}/members/kakao/login?code=${code}`
     );
-
     return response.data;
   } catch (error) {
     throw new Error("카카오 로그인에 실패했습니다.");
   }
 };
 
-export const logout = async (accessToken: string): Promise<void> => {
+export const logout = async (
+  accessToken: string
+): Promise<void> => {
   try {
     await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/members/logout`, 
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
     
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-  } catch (error) {
-    console.error("로그아웃에 실패했습니다.", error);
+  } catch {
+    throw new Error("로그아웃에 실패했습니다.");
   }
 };
 
-export const findUsername = async (email: string): Promise<ApiResponse<string>> => {
+export const findUsername = async (
+  email: string
+): Promise<ApiResponse<string>> => {
   try {
     const response = await axios.post<ApiResponse<string>>(
-      `${API_BASE_URL}/members/username`, { email });
-
+      `${API_BASE_URL}/members/username`, 
+      { email });
     return response.data;
   } catch (error: any) {
     if (error.response) {
@@ -119,11 +116,14 @@ export const findUsername = async (email: string): Promise<ApiResponse<string>> 
   }
 };
 
-export const findPassword = async (username: string, email: string): Promise<ApiResponse<string>> => {
+export const findPassword = async (
+  username: string, 
+  email: string
+): Promise<ApiResponse<string>> => {
   try {
     const response = await axios.post<ApiResponse<string>>(
-      `${API_BASE_URL}/members/password`, { username, email });
-
+      `${API_BASE_URL}/members/password`, 
+      { username, email });
     return response.data;
   } catch (error: any) {
     if (error.response) {
@@ -133,77 +133,82 @@ export const findPassword = async (username: string, email: string): Promise<Api
   }
 };
 
-export const sendVerificationEmail = async (email: string): Promise<ApiResponse<string>> => {
+export const sendVerificationEmail = async (
+  email: string
+): Promise<ApiResponse<string>> => {
   try {
     const response = await axios.post<ApiResponse<string>>(
-      `${API_BASE_URL}/auth/send/verification`, { email });
-
+      `${API_BASE_URL}/auth/send/verification`, 
+      { email });
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("이메일 전송에 실패했습니다.");
   }
 };
 
-export const verifyCode = async (email: string, code: string): Promise<ApiResponse<string>> => {
+export const verifyCode = async (
+  email: string, 
+  code: string
+): Promise<ApiResponse<string>> => {
   try {
     const response = await axios.post<ApiResponse<string>>(
-      `${API_BASE_URL}/auth/verification`, { email, code });
-
+      `${API_BASE_URL}/auth/verification`, 
+      { email, code });
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("인증 번호 검증에 실패했습니다.");
   }
 };
 
-export const checkUsernameAvailability = async (username: string): Promise<ApiResponse<boolean>> => {
+export const checkUsernameAvailability = async (
+  username: string
+): Promise<ApiResponse<boolean>> => {
   try {
     const response = await axios.post<ApiResponse<boolean>>(
-      `${API_BASE_URL}/members/username/duplication`, { username });
-
+      `${API_BASE_URL}/members/username/duplication`, 
+      { username });
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("아이디 중복 확인에 실패했습니다.");
   }
 };
 
-export const checkNicknameAvailability = async (nickname: string): Promise<ApiResponse<boolean>> => {
+export const checkNicknameAvailability = async (
+  nickname: string
+): Promise<ApiResponse<boolean>> => {
   try {
     const response = await axios.get<ApiResponse<boolean>>(
       `${API_BASE_URL}/members/nickname/duplication`, {
       params: { nickname }
     });
-
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("닉네임 중복 확인에 실패했습니다.");
   }
 };
 
-export const updateAdditionalInfo = async(additionalInfoDto: AdditionalInfoDto, token: string) => {
+export const updateAdditionalInfo = async(
+  additionalInfoDto: AdditionalInfoDto, 
+  accessToken: string
+) => {
   try {
     const response = await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/members/additional-info`,
       additionalInfoDto,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-      });
-      
+      authHeader(accessToken)
+    );  
     return response.data;
-  } catch (error) {
+  } catch {
     throw new Error("추가 정보 입력에 실패했습니다.");
   }
 };
 
-export const getCurrentMemberId = async (accessToken: string): Promise<number> => {
+export const getCurrentMemberId = async (
+  accessToken: string
+): Promise<number> => {
   const response = await axios.get<ApiResponse<number>>(
     `${API_BASE_URL}/members/me`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
+    authHeader(accessToken)
   );
   if (response.data.result === undefined || response.data.result === null) {
     throw new Error('회원 정보를 가져올 수 없습니다.');

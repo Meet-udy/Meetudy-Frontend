@@ -1,4 +1,5 @@
 import axios from "axios";
+import { authHeader, ApiResponse } from "./apiUtils.ts";
 import { transformStudyGroupData, transformStudyGroupFromResult } from "../utils/studyGroupUtils.ts";
 
 const API_BASE_URL = "http://localhost:8080"; 
@@ -12,6 +13,7 @@ export interface StudyGroupDto {
   isOnline: boolean;
   location: string;
   maxParticipants: number;
+  isRecruiting?: boolean;
 }
 
 export interface StudyGroupMemberDto {
@@ -23,118 +25,91 @@ export interface StudyGroupMemberDto {
   interests: string[]; 
 }
 
-export interface ApiResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result?: T;
-}
-
-export const getSortedStudyGroups = async (accessToken: string, sortBy: string) => {
+export const getSortedStudyGroups = async (
+  accessToken: string, 
+  sortBy: string
+): Promise<StudyGroupDto[]> => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/search/sort?sortBy=${sortBy}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return response.data.result.map(transformStudyGroupData);
+    const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
+      `${API_BASE_URL}/search/sort?sortBy=${sortBy}`, 
+      authHeader(accessToken)
+    );
+    return response.data.result!.map(transformStudyGroupData);
   } catch (error) {
     throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
 
-export const getStudyGroupById = async (groupId: number) => {
+export const getStudyGroupById = async (
+  groupId: number
+): Promise<StudyGroupDto> => {
   try {
-    const response = await axios.get(
+    const response = await axios.get<ApiResponse<StudyGroupDto>>(
       `${API_BASE_URL}/study-groups/${groupId}`,
     );
-
-    return transformStudyGroupFromResult(response.data.result);
+    return transformStudyGroupFromResult(response.data.result!);
   } catch(error) {
     throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
 
-export const createStudyGroup = async (accessToken: string, studyGroupDto: StudyGroupDto) => {
+export const createStudyGroup = async (
+  accessToken: string, 
+  studyGroupDto: StudyGroupDto
+) => {
   try {
     const response = await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups`,
       studyGroupDto,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-      }
+      authHeader(accessToken)
     );
-
     return response.data;
   } catch (error) {
     throw new Error("스터디 그룹 생성에 실패했습니다.");
   }
 };
 
-export const getCreatedStudyGroups = async (accessToken: string) => {
+export const getCreatedStudyGroups = async (
+  accessToken: string
+): Promise<StudyGroupDto[]> => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/study-groups/created-groups`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return response.data.result.map(transformStudyGroupData);
+    const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
+      `${API_BASE_URL}/study-groups/created-groups`, 
+      authHeader(accessToken)
+    );
+    return response.data.result!.map(transformStudyGroupData);
   } catch (error) {
       throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
 
-export const getJoinedStudyGroups = async (accessToken: string) => {
+export const getJoinedStudyGroups = async (
+  accessToken: string
+): Promise<StudyGroupDto[]> => {
   try {
-    const response = await axios.get(
-      `${API_BASE_URL}/study-groups/joined-groups`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return response.data.result.map(transformStudyGroupData);
+    const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
+      `${API_BASE_URL}/study-groups/joined-groups`, 
+      authHeader(accessToken)
+    );
+    return response.data.result!.map(transformStudyGroupData);
   } catch (error) {
     throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
 
-export const requestJoinGroup = async (accessToken: string, groupId: number) => {
+export const requestJoinGroup = async (
+  accessToken: string, 
+  groupId: number
+) => {
   try {
     const response = await axios.post<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups/${groupId}/join-requests`,
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-      }
+      authHeader(accessToken)
     );
-
     return response.data;
   } catch (error) {
     throw new Error("스터디 그룹 가입 요청에 실패했습니다.");
-  }
-};
-
-export const getMembersByStatus = async (accessToken: string) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/study-groups/joined-groups`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    return response.data.result.map(transformStudyGroupData);
-  } catch (error) {
-    throw new Error("스터디 그룹을 조회할 수 없습니다.");
   }
 };
 
@@ -144,7 +119,7 @@ export const getStudyGroupMembers = async (
   status: string
 ): Promise<StudyGroupMemberDto[]> => {
   try {
-    const response = await axios.get(
+    const response = await axios.get<ApiResponse<StudyGroupMemberDto[]>>(
       `${API_BASE_URL}/study-groups/${groupId}/members`,
       {
         params: { status },
@@ -164,16 +139,12 @@ export const approveJoinRequest = async (
   groupMemberId: number
 ): Promise<string> => {
   try {
-    const response = await axios.put(
+    const response = await axios.put<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups/${groupMemberId}/approval`,
       null,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
-    return response.data.result || [];
+    return response.data.result!;
   } catch (error) {
     throw new Error("스터디 가입 승인에 실패했습니다.");
   }
@@ -184,16 +155,12 @@ export const rejectJoinRequest = async (
   groupMemberId: number
 ): Promise<string> => {
   try {
-    const response = await axios.put(
+    const response = await axios.put<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups/${groupMemberId}/rejection`,
       null,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
-    return response.data.result || [];
+    return response.data.result!;
   } catch (error) {
     throw new Error("스터디 가입 거절에 실패했습니다.");
   }
@@ -202,18 +169,14 @@ export const rejectJoinRequest = async (
 export const closeRecruitment = async (
   accessToken: string,
   groupId: number
-): Promise<string> => {
+): Promise<StudyGroupDto> => {
   try {
-    const response = await axios.put(
+    const response = await axios.patch<ApiResponse<StudyGroupDto>>(
       `${API_BASE_URL}/study-groups/${groupId}/closure`,
       null,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
-    return response.data.result || [];
+    return response.data.result!;
   } catch (error) {
     throw new Error("스터디 멤버 모집 종료에 실패했습니다.");
   }
@@ -225,13 +188,9 @@ export const removeMemberFromGroup = async (
   groupMemberId: number
 ): Promise<string> => {
   try {
-    const response = await axios.delete(
+    const response = await axios.delete<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups/${groupId}/member/${groupMemberId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
     return response.data.result || "멤버가 성공적으로 탈퇴되었습니다.";
   } catch (error) {
@@ -244,13 +203,9 @@ export const leaveStudyGroup = async (
   groupId: number
 ): Promise<string> => {
   try {
-    const response = await axios.delete(
+    const response = await axios.delete<ApiResponse<string>>(
       `${API_BASE_URL}/study-groups/${groupId}/member`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
     return response.data.result || "멤버가 성공적으로 탈퇴되었습니다.";
   } catch (error) {
