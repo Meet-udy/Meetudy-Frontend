@@ -1,4 +1,5 @@
 import axios from "axios";
+import { authHeader, ApiResponse } from "./apiUtils.ts";
 
 const API_BASE_URL = "http://localhost:8080"; 
 
@@ -28,26 +29,16 @@ export interface ChatResponseDto {
   mine: boolean;
 }
 
-export interface ApiResponse<T> {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result?: T;
-}
-
-export const getChatRooms = async (accessToken: string): Promise<ChatRoomInfoDto[]> => {
+export const getChatRooms = async (
+  accessToken: string
+): Promise<ChatRoomInfoDto[]> => {
   try {
     const response = await axios.get<ApiResponse<ChatRoomInfoDto[]>>(
       `${API_BASE_URL}/chats/rooms`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      authHeader(accessToken)
     );
-
     return response.data.result || [];
-  } catch (error) {
+  } catch {
     throw new Error("채팅방 정보를 불러오는 데 실패했습니다.");
   }
 };
@@ -55,45 +46,58 @@ export const getChatRooms = async (accessToken: string): Promise<ChatRoomInfoDto
 export const createGroupChatRoom = async (
   accessToken: string,
   groupId: number
-) => {
-  const response = await axios.post(
-   `${API_BASE_URL}/chats/room/group/${groupId}`, 
-    null, 
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-  return response.data.result;
+): Promise<string> => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(
+      `${API_BASE_URL}/chats/room/group/${groupId}`, 
+       null, 
+       authHeader(accessToken)
+     );
+     return response.data.result!;
+  } catch {
+    throw new Error("채팅방 생성에 실패했습니다.");
+  }
 };
 
 export const getMessages = async (
   accessToken: string,
   roomId: number
 ): Promise<ChatResponseDto[]> => {
-  const response = await axios.get(
-    `${API_BASE_URL}/chats/room/${roomId}/messages`, 
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-  return response.data.result;
+  try {
+    const response = await axios.get<ApiResponse<ChatResponseDto[]>>(
+      `${API_BASE_URL}/chats/room/${roomId}/messages`, 
+      authHeader(accessToken)
+    );
+    return response.data.result || [];
+  } catch {
+    throw new Error("채팅 메시지를 불러오는 데 실패했습니다.");
+  }
 };
 
 export const leaveChatRoom = async (
   accessToken: string,
   roomId: number
 ): Promise<string> => {
-  const response = await axios.delete(
-    `${API_BASE_URL}/chats/room/${roomId}`, 
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-  return response.data.result;
+  try {
+    const response = await axios.delete<ApiResponse<string>>(
+      `${API_BASE_URL}/chats/room/${roomId}`, 
+      authHeader(accessToken)
+    );
+    return response.data.result!;
+  } catch {
+    throw new Error("채팅방을 나가는 데 실패했습니다.");
+  }
+};
+
+export const getChatRoomByGroupId = async (
+  groupId: number
+): Promise<number> => {
+  try {
+    const response = await axios.get<ApiResponse<number>>(
+      `${API_BASE_URL}/chats/room/group/${groupId}`
+    );
+    return response.data.result!;
+  } catch {
+    throw new Error("채팅방 ID를 조회하는 데 실패했습니다.");
+  }
 };
