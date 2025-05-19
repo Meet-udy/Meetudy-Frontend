@@ -28,7 +28,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
   const [memberModalOpen, setMemberModalOpen] = useState(false); 
   const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); 
   const [closedGroups, setClosedGroups] = useState<number[]>([]);
-  const [errors, setErrors] = useState<any>({});
+  const [error, setError] = useState<string | null>(null);
   const [createdChatRooms, setCreatedChatRooms] = useState<number[]>([]);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
@@ -41,7 +41,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
 
     const fetchStudyGroups = async () => {
       if (!accessToken) {
-        setErrors({ general: "사용자 토큰이 필요합니다." });
+        setError("사용자 토큰이 필요합니다.");
         return;
       }
 
@@ -49,7 +49,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
         const createdGroups = await getCreatedStudyGroups(accessToken);
         setStudyGroups(createdGroups);
       } catch (error) {
-        setErrors({ general: "스터디 그룹을 조회할 수 없습니다." });
+        setError("스터디 그룹을 조회할 수 없습니다.");
       }
     };
 
@@ -58,7 +58,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
 
   const handleInfoClick = async (groupId: number) => {
     if (groupId === null || groupId === undefined) {
-      setErrors({ general: "잘못된 그룹 ID입니다." });
+      setError("잘못된 그룹 ID입니다.");
       return;
     }
 
@@ -67,7 +67,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
       setSelectedGroup(groupDetail);
       setIsModalOpen(true);
     } catch (error) {
-      setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
+      setError("스터디 그룹 상세 정보를 불러오는 데 실패했습니다.");
     }
   };
 
@@ -80,16 +80,18 @@ export const LeaderStudyGroupPage: React.FC = () => {
     if (!accessToken) return;
   
     try {
-      await closeRecruitment(accessToken, groupId);
-      setClosedGroups((prev) => [...prev, groupId]);
+      const updatedGroup = await closeRecruitment(accessToken, groupId);
+      setStudyGroups(prev =>
+        prev.map(group => (group.id === groupId ? updatedGroup : group))
+      );
     } catch (error) {
       alert("인원 모집 종료에 실패했습니다.");
     }
-  };  
+  };
 
   const handleCreateChatRoom = async (groupId: number) => {
     if (typeof groupId !== "number") {
-      alert("잘못된 그룹 ID입니다.");
+      setError("잘못된 그룹 ID입니다.");
       return;
     }
 
@@ -103,8 +105,12 @@ export const LeaderStudyGroupPage: React.FC = () => {
       setCreatedChatRooms((prev) => [...prev, groupId]);
       localStorage.setItem("createdChatRooms", JSON.stringify([...createdChatRooms, groupId]));
       alert("채팅방이 생성되었습니다.");
-    } catch (error) {
-      alert("채팅방 생성에 실패했습니다.");
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.code === "CHAT502") {
+        alert("그룹 멤버가 1명 이상 존재해야 채팅방을 생성할 수 있습니다.");
+      } else {
+        alert("채팅방이 이미 생성되어 있습니다.");
+      }
     }
   };
 
@@ -143,11 +149,10 @@ export const LeaderStudyGroupPage: React.FC = () => {
                 >
                   멤버 관리
                 </button>
-
-                {typeof group.id === 'number' && !closedGroups.includes(group.id) && (
+                {group.id != null && group.isRecruiting && (
                   <button
                     className="study-group-btn"
-                    onClick={() => handleCloseRecruitment(group.id as number)}
+                    onClick={() => handleCloseRecruitment(group.id!)}
                   >
                     인원 모집 완료
                   </button>
