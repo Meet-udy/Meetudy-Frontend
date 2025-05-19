@@ -9,6 +9,7 @@ export const useModal = () => {
   const handleCloseModal = () => setIsModalOpen(false);
   const handleGoHome = () => navigate("/");
   const handleGoLogin = () => navigate("/login");
+  const handleGoStudyGroup = () => navigate("/study-groups");
 
   return {
     isModalOpen,
@@ -18,5 +19,6 @@ export const useModal = () => {
     handleCloseModal,
     handleGoHome,
     handleGoLogin,
+    handleGoStudyGroup
   };
 };
