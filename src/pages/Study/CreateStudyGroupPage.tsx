@@ -10,7 +10,7 @@ import { locationMapping } from "../../constants/locationMapping.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import './CreateStudyGroupPage.css';
 
-const StudyGroupForm = () => {
+const CreateStudyGroupPage = () => {
   const [formData, setFormData] = useState<StudyGroupDto>({
     category: "",
     name: "",
@@ -21,8 +21,8 @@ const StudyGroupForm = () => {
     isOnline: false,
   });
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { isModalOpen, setIsModalOpen, modalMessage, setModalMessage, handleCloseModal, handleGoHome, handleGoLogin } = useModal();
+  const [errors, setErrors] = useState<any>({});
+  const { isModalOpen, setIsModalOpen, modalMessage, setModalMessage, handleCloseModal, handleGoHome, handleGoLogin, handleGoStudyGroup } = useModal();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,7 +47,7 @@ const StudyGroupForm = () => {
   const handleCreateStudyGroup = async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
-      setErrorMessage("로그인이 필요합니다.");
+      setErrors({ general: "로그인이 필요합니다." });
       return;
     }
 
@@ -66,10 +66,10 @@ const StudyGroupForm = () => {
           isOnline: false,
         });
       } else {
-        setErrorMessage(response.message || "스터디 그룹 생성에 실패했습니다.");
+        setErrors({ general: response.message || "스터디 그룹 생성에 실패했습니다." });
       }
     } catch (error) {
-      setErrorMessage("스터디 그룹 생성에 실패했습니다.");
+      setErrors({ general: "스터디 그룹 생성에 실패했습니다." });
     }
   };
 
@@ -77,7 +77,7 @@ const StudyGroupForm = () => {
     <div className="createStudyGroupPage">
       <h1 className="title">스터디 그룹 생성</h1>
 
-      {errorMessage && <p className="error">{errorMessage}</p>}
+      {errors.general && <p className="error">{errors.general}</p>}
 
       <div className="formGroup">
         <label className="label">진행 방식</label>
@@ -164,7 +164,7 @@ const StudyGroupForm = () => {
           message={modalMessage}
           onClose={handleCloseModal}
           onConfirmHome={handleGoHome}
-          onConfirmLogin={handleGoLogin}
+          onConfirmStudyGroup={handleGoStudyGroup}
           type="studyGroup"
         />
       )}
@@ -172,4 +172,4 @@ const StudyGroupForm = () => {
   );
 };
 
-export default StudyGroupForm;
+export default CreateStudyGroupPage;
