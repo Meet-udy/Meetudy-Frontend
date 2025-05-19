@@ -24,14 +24,14 @@ export const StudyGroupPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<SortType>("LATEST");
   const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
   const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
-  const [errors, setErrors] = useState<any>({});
+  const [error, setError] = useState<string | null>(null);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchStudyGroups = async () => {
       if (!accessToken) {
-        setErrors({ general: "사용자 토큰이 필요합니다." });
+        setError("사용자 토큰이 필요합니다.");
         return;
       }
 
@@ -39,7 +39,7 @@ export const StudyGroupPage: React.FC = () => {
         const sortedGroups = await getSortedStudyGroups(accessToken, sortBy);
         setStudyGroups(sortedGroups);
       } catch (error) {
-        setErrors({ general: "스터디 그룹을 조회할 수 없습니다." });
+        setError("스터디 그룹을 조회할 수 없습니다.");
       }
     };
 
@@ -48,7 +48,7 @@ export const StudyGroupPage: React.FC = () => {
 
   const handleCardClick = async (groupId: number) => {
     if (groupId === null || groupId === undefined) {
-      setErrors({ general: "잘못된 그룹 ID입니다." });
+      setError("잘못된 그룹 ID입니다.");
       return;
     }
 
@@ -57,13 +57,13 @@ export const StudyGroupPage: React.FC = () => {
       setSelectedGroup(groupDetail);
       setIsModalOpen(true);
     } catch (error) {
-      setErrors({ general: "스터디 그룹 상세 정보를 불러오는 데 실패했습니다." });
+      setError("스터디 그룹 상세 정보를 불러오는 데 실패했습니다.");
     }
   };
 
   const handleJoinGroup = async (groupId: number) => {
     if (!accessToken) {
-      setErrors({ general: "사용자 토큰이 필요합니다." });
+      setError("사용자 토큰이 필요합니다.");
       return;
     }
 
@@ -72,7 +72,7 @@ export const StudyGroupPage: React.FC = () => {
       alert("가입 요청이 성공적으로 전송되었습니다.");
       handleCloseModal(); 
     } catch (error) {
-      setErrors({ general: "스터디 그룹 가입 요청에 실패했습니다." });
+      setError( "스터디 그룹 가입 요청에 실패했습니다.");
     }
   };
 

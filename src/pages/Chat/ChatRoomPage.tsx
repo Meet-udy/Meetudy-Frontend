@@ -21,6 +21,7 @@ const ChatRoomPage: React.FC = () => {
   const accessToken = localStorage.getItem('accessToken');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     if (!accessToken || !roomId) return;
@@ -39,7 +40,7 @@ const ChatRoomPage: React.FC = () => {
           setGroupName(currentRoom.groupName || currentRoom.displayName);
         }
       } catch (err) {
-        console.error('데이터 로딩에 실패했습니다.', err);
+        setError("데이터를 불러오는 데 실패했습니다.");
       }
     };
     
@@ -112,7 +113,7 @@ const ChatRoomPage: React.FC = () => {
       await leaveChatRoom(accessToken, Number(roomId));
       window.location.href = '/chat-rooms';
     } catch (error) {
-      console.error('채팅방 나가기 실패', error);
+      setError("채팅방 나가기에 실패했습니다.");
     }
   };
   
