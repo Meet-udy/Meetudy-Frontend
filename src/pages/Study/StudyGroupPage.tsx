@@ -4,6 +4,7 @@ import { Header } from "../../components/layout/Header.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import SortDropdown, { SortType } from "../../components/studyGroup/SortDroupdown.tsx";
 import { getSortedStudyGroups, getStudyGroupById, requestJoinGroup } from "../../api/studyGroupApi.ts";
+import { createPrivateChatRoom } from "../../api/chatApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import './StudyGroupPage.css';
@@ -24,9 +25,17 @@ export const StudyGroupPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<SortType>("LATEST");
   const { isModalOpen, setIsModalOpen, handleCloseModal } = useModal();
   const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
+  const [createdPrivateChatRooms, setCreatedPrivateChatRooms] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    const storedPrivateChatRooms = JSON.parse(localStorage.getItem("createdPrivateChatRooms") || "[]");
+    if (Array.isArray(storedPrivateChatRooms)) {
+      setCreatedPrivateChatRooms(storedPrivateChatRooms);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchStudyGroups = async () => {
@@ -76,6 +85,28 @@ export const StudyGroupPage: React.FC = () => {
     }
   };
 
+  const handleCreatePrivateChatRoom = async (groupId: number) => {
+    if (!accessToken) {
+      setError("사용자 토큰이 필요합니다.");
+      return;
+    }
+
+    try {
+      await createPrivateChatRoom(accessToken, groupId);
+
+      setCreatedPrivateChatRooms(prev => {
+        const updated = [...prev, groupId];
+        localStorage.setItem("createdPrivateChatRooms", JSON.stringify(updated));
+        return updated;
+      });
+
+      alert("개인 채팅방이 생성되었습니다.");
+    } catch (error) {
+      alert("개인 채팅방 생성에 실패했습니다.");
+      console.log(error);
+    }
+  };
+
   return (
     <div className="study-group-page">
       <Header />
@@ -118,6 +149,7 @@ export const StudyGroupPage: React.FC = () => {
           groupId={selectedGroup.id}
           onJoin={handleJoinGroup}
           onClose={handleCloseModal}
+          onCreateQuestionChatRoom={handleCreatePrivateChatRoom}
           sourcePage="StudyGroupPage"
         />
       )}
