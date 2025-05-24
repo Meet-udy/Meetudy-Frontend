@@ -43,6 +43,22 @@ export const getChatRooms = async (
   }
 };
 
+export const createPrivateChatRoom = async (
+  accessToken: string,
+  groupId: number
+): Promise<string> => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(
+     `${API_BASE_URL}/chats/room/private/${groupId}`, 
+       null, 
+       authHeader(accessToken)
+     );
+     return response.data.result!;
+  } catch {
+    throw new Error("채팅방 생성에 실패했습니다.");
+  }
+};
+
 export const createGroupChatRoom = async (
   accessToken: string,
   groupId: number
