@@ -13,6 +13,7 @@ interface StudyGroupDetailModalProps {
   groupId?: number;
   onJoin?: (groupId: number) => void;
   onClose: () => void;
+  onCreateQuestionChatRoom?: (groupId: number) => void;
   sourcePage: "StudyGroupPage" | "LeaderStudyGroupPage" | "MemberStudyGroupPage";
 }
 
@@ -21,6 +22,7 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
   groupId,
   onJoin,
   onClose,
+  onCreateQuestionChatRoom,
   sourcePage
 }) => {
 
@@ -92,7 +94,16 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
 
           {sourcePage === "StudyGroupPage" && (
             <ModalFooter>
-              <FooterButton>질문 채팅방 생성</FooterButton>
+              <FooterButton
+                onClick={() => {
+                  if (onCreateQuestionChatRoom && groupId !== undefined) {
+                    onCreateQuestionChatRoom(groupId);
+                  }
+                }}
+              >
+                질문 채팅방 생성
+              </FooterButton>
+              
               <FooterButton
                 onClick={() => {
                   if (onJoin && groupId !== undefined) {
