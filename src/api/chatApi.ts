@@ -43,6 +43,33 @@ export const getChatRooms = async (
   }
 };
 
+export const createPrivateChatRoom = async (
+  accessToken: string,
+  groupId: number
+): Promise<string> => {
+  try {
+    const response = await axios.post<ApiResponse<string>>(
+     `${API_BASE_URL}/chats/room/private/${groupId}`, 
+       null, 
+       authHeader(accessToken)
+     );
+     return response.data.result!;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error("❌ AxiosError 발생!");
+      console.error("📡 요청 URL:", error.config?.url);
+      console.error("📄 요청 Method:", error.config?.method);
+      console.error("🔐 요청 Headers:", error.config?.headers);
+      console.error("📦 요청 Data:", error.config?.data);
+      console.error("❗ 응답 상태 코드:", error.response?.status);
+      console.error("❗ 응답 데이터:", error.response?.data);
+    } else {
+      console.error("❌ 일반 에러:", error);
+    }
+    throw new Error("채팅방 생성에 실패했습니다.");
+  }
+};
+
 export const createGroupChatRoom = async (
   accessToken: string,
   groupId: number
