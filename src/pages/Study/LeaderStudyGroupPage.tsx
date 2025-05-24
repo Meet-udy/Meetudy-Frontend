@@ -102,11 +102,16 @@ export const LeaderStudyGroupPage: React.FC = () => {
 
     try {
       const result = await createGroupChatRoom(accessToken, groupId);
-      setCreatedChatRooms((prev) => [...prev, groupId]);
-      localStorage.setItem("createdChatRooms", JSON.stringify([...createdChatRooms, groupId]));
+      
+      setCreatedChatRooms(prev => {
+        const updated = [...prev, groupId];
+        localStorage.setItem("createdChatRooms", JSON.stringify(updated));
+        return updated;
+      });
+  
       alert("채팅방이 생성되었습니다.");
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.code === "CHAT502") {
+      if (error.response?.data?.code === "CHAT502") {
         alert("그룹 멤버가 1명 이상 존재해야 채팅방을 생성할 수 있습니다.");
       } else {
         alert("채팅방이 이미 생성되어 있습니다.");
