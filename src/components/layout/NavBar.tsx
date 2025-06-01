@@ -13,12 +13,16 @@ export const NavBar: React.FC = () => {
     navigate('/chat-rooms');
   }
 
+  const handleCommunityClick = () => {
+    navigate('/community');
+  }
+
   return (
     <nav className="nav-menu">
       <ul>
         <li onClick={handleGroupClick}>GROUP</li>
         <li onClick={handleChatClick}>CHAT</li>
-        <li>COMMUNITY</li>
+        <li onClick={handleCommunityClick}>COMMUNITY</li>
         <li>MYPAGE</li>
         <li>NOTICE</li>
       </ul>
