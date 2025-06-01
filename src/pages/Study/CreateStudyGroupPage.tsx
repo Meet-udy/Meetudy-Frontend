@@ -5,7 +5,7 @@ import Slider from "../../components/studyGroup/Slider.tsx";
 import DatePicker from "../../components/studyGroup/DatePicker.tsx";
 import Modal from "../../components/ui/Modal.tsx";
 import { createStudyGroup, StudyGroupDto } from "../../api/studyGroupApi.ts"; 
-import { categoryMapping } from "../../constants/categoryMapping.ts";
+import { studyCategoryMapping } from "../../constants/studyCategoryMapping.ts";
 import { locationMapping } from "../../constants/locationMapping.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import './CreateStudyGroupPage.css';
@@ -112,7 +112,7 @@ const CreateStudyGroupPage = () => {
       <div className="formGroup">
         <label className="label">스터디 카테고리</label>
         <div className="buttonGroup">
-          {Object.entries(categoryMapping).map(([key, label]) => (
+          {Object.entries(studyCategoryMapping).map(([key, label]) => (
             <SelectableButton
               key={key}
               label={label}
