@@ -1,0 +1,96 @@
+.post-list-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+  
+.top-divider {
+  border: none; 
+  height: 1px;
+  background-color: #1f72c566;
+  margin-top: 10px;
+}
+
+.section-title {
+  font-size: 20px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  text-align: left;
+}
+  
+.section-divider {
+  border: none;
+  height: 2px;
+  background-color: #555;
+  margin-bottom: 12px;
+}
+
+.post-table-header {
+  display: flex;
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 8px 0;
+}
+  
+.light-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-top: -3px;
+  margin-bottom: 4px;
+}
+
+.post-table-body {
+  list-style: none;
+  padding: 0;
+   margin: 0;
+}
+  
+.post-row {
+  display: flex;
+  padding: 5px 0;
+  margin-top: 20px;
+  margin-bottom: -3px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+  
+.post-row:hover {
+  background-color: #f8f8f8;
+}
+ 
+.column {
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem; 
+  color: #333; 
+}
+  
+.column.category {
+  width: 12%;
+}
+  
+.column.title {
+  width: 38%;
+}
+  
+.column.author {
+  width: 15%;
+}
+  
+.column.date {
+  width: 25%;
+}
+  
+.column.comments {
+  width: 10%;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 16px;
+}
