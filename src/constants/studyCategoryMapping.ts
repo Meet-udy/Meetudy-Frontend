@@ -1,4 +1,4 @@
-export const categoryMapping: { [key: string]: string } = {
+export const studyCategoryMapping: { [key: string]: string } = {
   LANGUAGE: "어학",
   CERTIFICATION: "자격증",
   HUMANITIES: "인문학",

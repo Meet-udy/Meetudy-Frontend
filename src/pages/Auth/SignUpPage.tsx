@@ -8,7 +8,7 @@ import Modal from "../../components/ui/Modal.tsx";
 import { signUp, sendVerificationEmail, verifyCode } from "../../api/authApi.ts"; 
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from "../../utils/validators.ts";
 import { locationMapping } from "../../constants/locationMapping.ts";
-import { categoryMapping } from "../../constants/categoryMapping.ts";
+import { studyCategoryMapping } from "../../constants/studyCategoryMapping.ts";
 import { useSignUpPage } from "../../hooks/useSignUpPage.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./SignUpPage.css";
@@ -315,10 +315,10 @@ const SignUpPage: React.FC = () => {
       <div className="form-group">
         <label className="required">관심 있는 스터디 카테고리</label>
         <div className="category-buttons">
-          {Object.keys(categoryMapping).map(category => (
+          {Object.keys(studyCategoryMapping).map(category => (
             <SelectableButton
             key={category}
-            label={categoryMapping[category]}
+            label={studyCategoryMapping[category]}
             isSelected={formData.studyCategories.includes(category)}
             onClick={() => handleCategoryChange(category)}
             disabled={formData.studyCategories.length >= 5 && !formData.studyCategories.includes(category)}

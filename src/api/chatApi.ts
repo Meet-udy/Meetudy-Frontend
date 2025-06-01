@@ -1,7 +1,5 @@
 import axios from "axios";
-import { authHeader, ApiResponse } from "./apiUtils.ts";
-
-const API_BASE_URL = "http://localhost:8080"; 
+import { API_BASE_URL, authHeader, ApiResponse } from "./apiUtils.ts";
 
 export interface ChatRoomInfoDto {
   roomId: number;

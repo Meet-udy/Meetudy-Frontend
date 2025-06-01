@@ -1,8 +1,7 @@
 import axios from "axios";
-import { authHeader, ApiResponse } from "./apiUtils.ts";
+import { API_BASE_URL, authHeader, ApiResponse } from "./apiUtils.ts";
 import { transformStudyGroupData, transformStudyGroupFromResult } from "../utils/studyGroupUtils.ts";
 
-const API_BASE_URL = "http://localhost:8080"; 
 
 export interface StudyGroupDto {
   id?: number | null;
