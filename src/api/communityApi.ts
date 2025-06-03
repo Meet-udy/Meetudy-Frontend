@@ -10,11 +10,20 @@ export interface PostRequestDto {
 export interface PostDto {
   postId: number;
   title: string;
-  content: string;
   postCategory: string;
   authorNickname: string;
   createdAt: string;
   commentCount: number;
+}
+
+export interface PostDetailDto {
+  postId: number;
+  title: string;
+  content: string;
+  postCategory: string;
+  authorNickname: string;
+  createdAt: string;
+  comments: CommentDto[];
 }
 
 export interface CommentRequestDto {
@@ -26,6 +35,7 @@ export interface CommentDto {
   content: string;
   authorNickname: string;
   createdAt: string;
+  mine: boolean;
 }
 
 export const createPost = async (
@@ -86,6 +96,21 @@ export const getAllPosts = async (): Promise<PostDto[]> => {
     throw new Error("게시글 조회에 실패했습니다.");
   }
 };
+
+export const getPostById = async (
+  postId: number,
+  accessToken: string
+): Promise<PostDetailDto> => {
+  try {
+    const response = await axios.get<ApiResponse<PostDetailDto>>(
+      `${API_BASE_URL}/posts/${postId}`,
+      authHeader(accessToken)
+    );
+    return response.data.result!;
+  } catch {
+    throw new Error("게시글 상세 조회에 실패했습니다.");
+  }
+};
   
 export const getPostsByMember = async (
   accessToken: string
@@ -120,12 +145,12 @@ export const createComment = async (
 export const updateComment = async (
   commentId: number,
   accessToken: string,
-  postRequestDto: PostRequestDto
+  commentRequestDto: CommentRequestDto
 ): Promise<string> => {
   try {
-    const response = await axios.patch<ApiResponse<string>>(
+    const response = await axios.put<ApiResponse<string>>(
       `${API_BASE_URL}/comments/${commentId}`, 
-      postRequestDto, 
+      commentRequestDto, 
       authHeader(accessToken)
     );
     return response.data.result!;
