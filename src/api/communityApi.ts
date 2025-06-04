@@ -23,6 +23,7 @@ export interface PostDetailDto {
   postCategory: string;
   authorNickname: string;
   createdAt: string;
+  isMyPost: boolean;
   comments: CommentDto[];
 }
 
@@ -35,7 +36,7 @@ export interface CommentDto {
   content: string;
   authorNickname: string;
   createdAt: string;
-  mine: boolean;
+  myComment: boolean;
 }
 
 export const createPost = async (
