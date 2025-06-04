@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { getPostById, createComment, updateComment, deleteComment, PostDetailDto, CommentDto } from "../../api/communityApi.ts";
+import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
+import {
+  getPostById,
+  createComment,
+  updateComment,
+  deleteComment,
+  updatePost,
+  deletePost,
+  PostDetailDto,
+  CommentDto,
+} from "../../api/communityApi.ts";
 import { Header } from "../../components/layout/Header.tsx";
 import { postCategoryMapping } from "../../constants/postCategoryMapping.ts";
 import { formatDateTime } from "../../utils/dateUtils.ts";
@@ -16,9 +25,13 @@ const PostDetailPage: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState<string>("");
+  const [isEditingPost, setIsEditingPost] = useState<boolean>(false);
+  const [editedTitle, setEditedTitle] = useState<string>("");
+  const [editedContent, setEditedContent] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const accessToken: string | null = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
 
   const fetchPostDetail = async () => {
     if (!accessToken) {
@@ -29,7 +42,7 @@ const PostDetailPage: React.FC = () => {
     try {
       const data = await getPostById(Number(postId), accessToken);
       setPost(data);
-      setComments(data.comments); 
+      setComments(data.comments);
     } catch {
       setError("게시글을 불러오는 데 실패했습니다.");
     }
@@ -42,7 +55,7 @@ const PostDetailPage: React.FC = () => {
     }
 
     if (!newComment.trim()) return;
-    
+
     try {
       await createComment(Number(postId), accessToken, { content: newComment });
       setNewComment("");
@@ -89,6 +102,52 @@ const PostDetailPage: React.FC = () => {
     }
   };
 
+  const handleEditPost = () => {
+    if (!post) return;
+    setIsEditingPost(true);
+    setEditedTitle(post.title);
+    setEditedContent(post.content);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingPost(false);
+  };
+
+  const handleSubmitEdit = async () => {
+    if (!post || !accessToken) return;
+    if (!editedTitle.trim() || !editedContent.trim()) {
+      alert("제목과 내용을 모두 입력해주세요.");
+      return;
+    }
+
+    try {
+      await updatePost(post.postId, accessToken, {
+        title: editedTitle,
+        content: editedContent,
+        postCategory: post.postCategory,
+      });
+      setIsEditingPost(false);
+      fetchPostDetail();
+    } catch {
+      alert("게시글 수정에 실패했습니다.");
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!post || !accessToken) return;
+
+    const confirmDelete = window.confirm("게시글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      await deletePost(post.postId, accessToken);
+      alert("게시글이 삭제되었습니다.");
+      navigate("/community"); 
+    } catch {
+      alert("게시글 삭제에 실패했습니다.");
+    }
+  };
+
   useEffect(() => {
     fetchPostDetail();
   }, [postId]);
@@ -100,15 +159,84 @@ const PostDetailPage: React.FC = () => {
       <div className="post-detail-wrapper">
         {post && (
           <>
-            <h2 className="section-title">{post.title}</h2> 
-            <hr className="section-divider" />
-            <div className="post-meta">
-              {postCategoryMapping[post.postCategory] || post.postCategory} |{" "}
-              {post.authorNickname} | {formatDateTime(post.createdAt)}
-            </div>
-            <div className="post-content-box">
-              <p className="post-content">{post.content}</p>
-            </div>
+            {isEditingPost ? (
+              <>
+                <input
+                  type="text"
+                  className="section-title"
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                />
+                <hr className="section-divider" />
+                <div className="post-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    {postCategoryMapping[post.postCategory] || post.postCategory} |{" "}
+                    {post.authorNickname} | {formatDateTime(post.createdAt)}
+                  </div>
+                  {post.isMyPost && (
+                    <div>
+                      <button
+                        className="icon-button"
+                        onClick={handleSubmitEdit}
+                        aria-label="게시글 수정 완료"
+                        title="수정 완료"
+                      >
+                        <FontAwesomeIcon icon={faPencil} />
+                      </button>
+                      <button
+                        className="icon-button"
+                        onClick={handleCancelEdit}
+                        aria-label="게시글 수정 취소"
+                        title="취소"
+                        style={{ marginLeft: "8px", color: "#6c757d" }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <textarea
+                  className="comment-textarea"
+                  value={editedContent}
+                  onChange={(e) => setEditedContent(e.target.value)}
+                />
+              </>
+            ) : (
+              <>
+                <h2 className="section-title">{post.title}</h2>
+                <hr className="section-divider" />
+                <div className="post-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    {postCategoryMapping[post.postCategory] || post.postCategory} |{" "}
+                    {post.authorNickname} | {formatDateTime(post.createdAt)}
+                  </div>
+                  {post.isMyPost && (
+                    <div>
+                      <button
+                        className="icon-button"
+                        onClick={handleEditPost}
+                        aria-label="게시글 수정"
+                        title="수정"
+                      >
+                        <FontAwesomeIcon icon={faPencil} />
+                      </button>
+                      <button
+                        className="icon-button"
+                        onClick={handleDeletePost}
+                        aria-label="게시글 삭제"
+                        title="삭제"
+                        style={{ marginLeft: "8px" }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="post-content-box">
+                  <p className="post-content">{post.content}</p>
+                </div>
+              </>
+            )}
 
             <div className="comment-input-wrapper">
               <textarea
@@ -148,7 +276,7 @@ const PostDetailPage: React.FC = () => {
 
                   <div className="comment-date">{formatDateTime(comment.createdAt)}</div>
 
-                  {comment.mine && editCommentId !== comment.commentId && (
+                  {comment.myComment && editCommentId !== comment.commentId && (
                     <div className="comment-actions">
                       <button
                         className="comment-submit-button"
@@ -162,7 +290,7 @@ const PostDetailPage: React.FC = () => {
                           cursor: "pointer",
                           marginRight: "8px",
                           fontSize: "1rem",
-                          color: "#007bff"
+                          color: "#007bff",
                         }}
                         aria-label="수정"
                       >
@@ -177,7 +305,7 @@ const PostDetailPage: React.FC = () => {
                           border: "none",
                           cursor: "pointer",
                           fontSize: "1rem",
-                          color: "#007bff"
+                          color: "#007bff",
                         }}
                         aria-label="삭제"
                       >
@@ -195,4 +323,4 @@ const PostDetailPage: React.FC = () => {
   );
 };
 
-export default PostDetailPage; 
+export default PostDetailPage;
