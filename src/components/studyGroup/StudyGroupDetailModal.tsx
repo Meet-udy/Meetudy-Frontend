@@ -155,7 +155,7 @@ const ModalHeader = styled.div`
   margin-left: 20px;
   text-align: left;
   h2 {
-    color: #1f72c5;
+    color: #555;
   }
 `;
 
@@ -173,7 +173,7 @@ const CloseBtn = styled.button`
   right: 10px;
   font-size: 24px;
   cursor: pointer;
-  color: #1f72c5;
+  color: #555;
   background: none;
   border: none;
 `;
@@ -198,7 +198,7 @@ const InfoLabel = styled.div`
   background-color: white;
   padding: 0 10px;
   font-size: 16px;
-  color: #1f72c5;
+  color: #555;
   font-weight: bold;
 `;
 
@@ -222,7 +222,7 @@ const FooterButton = styled.button`
   padding: 12px 16px;
   background-color: white;
   border: 1px solid #ccc;
-  color: #1f72c5;
+  color: #555;
   font-size: 16px;
   font-weight: bold;
   border-radius: 6px;

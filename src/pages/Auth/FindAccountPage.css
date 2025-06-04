@@ -22,8 +22,8 @@
 }
 
 .tab.active {
-  border-color: #1f72c5;
-  color: #1f72c5;
+  border-color: #666;
+  color: #666;
 }
 
 h2 {
@@ -53,7 +53,7 @@ p {
 }
 
 .submit-btn {
-  background-color: #1f72c5;
+  background-color: #666;
   color: white;
   border: none;
   padding: 15px 20px;
@@ -63,7 +63,7 @@ p {
 }
 
 .submit-btn:hover {
-  background-color: #155a8a;
+  background-color: #666666c5;
 }
 
 .email-container {

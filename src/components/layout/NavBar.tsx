@@ -24,7 +24,6 @@ export const NavBar: React.FC = () => {
         <li onClick={handleChatClick}>CHAT</li>
         <li onClick={handleCommunityClick}>COMMUNITY</li>
         <li>MYPAGE</li>
-        <li>NOTICE</li>
       </ul>
     </nav>
   );

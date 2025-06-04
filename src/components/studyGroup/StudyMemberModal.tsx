@@ -201,7 +201,7 @@ const styles = {
   closeButton: {
     marginTop: "20px",
     padding: "10px 20px",
-    backgroundColor: "#007bff",
+    backgroundColor: "#666",
     color: "#fff",
     border: "none",
     borderRadius: "5px",
@@ -224,7 +224,7 @@ const styles = {
     cursor: "pointer",
   },
   activeTabButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#666",
     color: "#fff",
   },
   actionButtons: {
@@ -235,7 +235,7 @@ const styles = {
   approveButton: {
     padding: "6px 12px",
     backgroundColor: "#fff",
-    color: "#1f72c5",
+    color: "#555",
     border: "1px solid #ccc",
     borderRadius: "5px",
     cursor: "pointer",
@@ -243,7 +243,7 @@ const styles = {
   rejectButton: {
     padding: "6px 12px",
     backgroundColor: "#fff",
-    color: "#1f72c5",
+    color: "#555",
     border: "1px solid #ccc",
     borderRadius: "5px",
     cursor: "pointer",

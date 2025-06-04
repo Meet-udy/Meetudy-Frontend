@@ -96,6 +96,7 @@ export const MemberStudyGroupPage: React.FC = () => {
   return (
     <div className="study-group-page">
       <Header />
+      <hr className="top-divider" />
       <div className="study-group-content">
         <StudyGroupSidebar />
         <div className="study-group-list">
@@ -105,7 +106,7 @@ export const MemberStudyGroupPage: React.FC = () => {
                 className="info-btn" 
                 onClick={() => group.id != null && handleInfoClick(group.id)}
               >
-                <FontAwesomeIcon icon={faCircleInfo} style={{ color: "#4a7dd3" }} />
+                <FontAwesomeIcon icon={faCircleInfo} style={{ color: "#666" }} />
               </button>
               <h3>{group.name}</h3>
               <img 
