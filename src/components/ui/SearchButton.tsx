@@ -11,13 +11,13 @@ export const SearchButton: React.FC<SearchButtonProps> = ({ onClick }) => {
 
 const StyledButton = styled.button`
   padding: 16px 23px;
-  background-color: #1f72c5;
+  background-color: #555;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #005bb5;
+    background-color: #666;
   }
 `;

@@ -15,7 +15,7 @@ const SelectableButton: React.FC<SelectableButtonProps> = ({ label, isSelected, 
     borderRadius: '5px',
     cursor: disabled ? 'not-allowed' : 'pointer',
     backgroundColor: disabled ? 'white' : isSelected ? 'rgb(242, 249, 255)' : 'white',
-    color: '#1f72c5',
+    color: '#555',
     opacity: disabled ? 0.5 : 1,
   };
 

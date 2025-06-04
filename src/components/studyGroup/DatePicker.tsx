@@ -41,7 +41,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ onDateChange }) => {
     border: '1px solid #ccc',
     borderRadius: '5px',
     backgroundColor: "white",
-    color: '#1f72c5',
+    color: '#555',
     padding: "8px 12px",
     fontSize: "14px",
     cursor: "pointer",

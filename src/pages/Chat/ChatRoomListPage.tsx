@@ -38,6 +38,7 @@ const ChatRoomListPage: React.FC = () => {
   return (
     <div>
       <Header />
+      <hr className="top-divider" />
       <div className="chat-room-list">
         <h2 className="title">채팅</h2>
         {error && <p className="error">{error}</p>}

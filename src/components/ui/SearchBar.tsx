@@ -42,7 +42,7 @@ const SearchContainer = styled.div`
 const SearchIcon = styled.i`
   position: absolute;
   left: 30px;
-  color: #1f72c5;
+  color: #555;
   font-size: 22px;
   pointer-events: none;
 `;

@@ -110,6 +110,7 @@ export const StudyGroupPage: React.FC = () => {
   return (
     <div className="study-group-page">
       <Header />
+      <hr className="top-divider" />
       <div className="study-group-content">
         <StudyGroupSidebar />
         <div className="sort-dropdown-container">

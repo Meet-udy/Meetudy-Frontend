@@ -16,7 +16,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ text, onClick }) => {
 const loginButtonStyle: React.CSSProperties = {
   padding: "10px",
   border: "none",
-  backgroundColor: "#1f72c5",
+  backgroundColor: "#555",
   color: "white",
   cursor: "pointer",
   borderRadius: "5px",

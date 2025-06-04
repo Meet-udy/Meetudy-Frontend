@@ -12,9 +12,9 @@ const VerifyButton: React.FC<VerifyButtonProps> = ({ onClick, children, classNam
       className={`verify-button ${className}`} 
       onClick={onClick}
       style={{
-        color: "#1f72c5",
-        border: "1px solid #1f72c5",
-        backgroundColor: "rgb(242, 249, 255)",
+        color: "#555",
+        border: "1px solid #555",
+        backgroundColor: "#55555508",
         padding: "5px 10px",
         borderRadius: "5px",
         cursor: "pointer",

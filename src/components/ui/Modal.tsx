@@ -71,7 +71,7 @@ const ModalHeader = styled.div`
 
 const CheckIcon = styled.span`
   font-size: 35px;
-  color: #1f72c5 !important;
+  color: #555 !important;
   margin-bottom: 35px;
 `;
 
@@ -93,7 +93,7 @@ const Button = styled.button`
   padding: 12px 25px;
   background-color: white;
   border: 1px solid #ddd;
-  color: #1f72c5;
+  color: #555;
   border-radius: 5px;
   cursor: pointer;
   width: 100%;
@@ -106,7 +106,7 @@ const CloseBtn = styled.button`
   right: 10px;
   font-size: 24px;
   cursor: pointer;
-  color: #1f72c5;
+  color: #555;
   background: none;
   border: none;
 `;

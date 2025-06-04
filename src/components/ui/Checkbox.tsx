@@ -15,7 +15,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label }) => {
         onChange={onChange}
         className="notification-checkbox"
         style={{
-          accentColor: '#1f72c5',  
+          accentColor: '#555',  
           transform: 'scale(1.5)', 
           cursor: 'pointer',       
         }}

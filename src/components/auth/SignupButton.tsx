@@ -15,7 +15,7 @@ const SignUpButton: React.FC<SignUpButtonProps> = ({ onClick, text, className })
 };
 
 const signUpButtonStyle: React.CSSProperties = {
-  color: "#1f72c5",
+  color: "#555",
   backgroundColor: "white",
   border: "1px solid #ddd",
   padding: "14px 30px",
