@@ -17,13 +17,17 @@ export const NavBar: React.FC = () => {
     navigate('/community');
   }
 
+  const handleMyPageClick = () => {
+    navigate('/my-page');
+  }
+
   return (
     <nav className="nav-menu">
       <ul>
         <li onClick={handleGroupClick}>GROUP</li>
         <li onClick={handleChatClick}>CHAT</li>
         <li onClick={handleCommunityClick}>COMMUNITY</li>
-        <li>MYPAGE</li>
+        <li onClick={handleMyPageClick}>MYPAGE</li>
       </ul>
     </nav>
   );
