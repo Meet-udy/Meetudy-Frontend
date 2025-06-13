@@ -1,0 +1,105 @@
+.mypage-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #555;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.user-profile-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 30px;
+  margin-bottom: -25px;
+  color: #555;
+}
+
+.profile-section {
+  max-width: 600px;
+  margin: 40px 0 0 0;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.profile-label {
+  flex: 0 0 150px; 
+  font-weight: 600;
+  padding-left: 16px;
+  border-right: 1px solid #ddd; 
+  height: 100%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  color: #555;
+  background-color: #55555513;
+}
+
+.profile-value {
+  flex: 1 1 auto;
+  padding-left: 16px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.profile-value input[type="text"],
+.profile-value textarea {
+  font-size: 15px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.profile-value textarea {
+  resize: vertical;
+  height: 60px;
+}
+
+.row-divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 0;
+}
+
+.button-wrapper {
+  max-width: 600px;
+  margin: 20px auto 0;
+  text-align: right;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  background-color: #555;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.cancel-btn {
+  background-color: #999;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+  background-color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #777;
+}
