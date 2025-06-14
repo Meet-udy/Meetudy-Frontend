@@ -13,6 +13,7 @@ export interface StudyGroupDto {
   location: string;
   maxParticipants: number;
   isRecruiting?: boolean;
+  myRole?: string;
 }
 
 export interface StudyGroupMemberDto {
@@ -82,12 +83,12 @@ export const getCreatedStudyGroups = async (
   }
 };
 
-export const getJoinedStudyGroups = async (
+export const getAllStudyGroupsWithStatus = async (
   accessToken: string
 ): Promise<StudyGroupDto[]> => {
   try {
     const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
-      `${API_BASE_URL}/study-groups/joined-groups`, 
+      `${API_BASE_URL}/study-groups/my-groups`, 
       authHeader(accessToken)
     );
     return response.data.result!.map(transformStudyGroupData);
