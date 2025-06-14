@@ -4,7 +4,7 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import { getJoinedStudyGroups, getStudyGroupById, leaveStudyGroup, StudyGroupDto } from "../../api/studyGroupApi.ts";
+import { getAllStudyGroupsWithStatus, getStudyGroupById, leaveStudyGroup, StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { getChatRoomByGroupId } from "../../api/chatApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
@@ -34,8 +34,9 @@ export const MemberStudyGroupPage: React.FC = () => {
       }
 
       try {
-        const createdGroups = await getJoinedStudyGroups(accessToken);
-        setStudyGroups(createdGroups);
+        const allGroups = await getAllStudyGroupsWithStatus(accessToken);
+        const memberGroups = allGroups.filter(group => group.myRole === "MEMBER");
+        setStudyGroups(memberGroups);
       } catch (error) {
         setError("스터디 그룹을 조회할 수 없습니다.");
       }
@@ -72,8 +73,9 @@ export const MemberStudyGroupPage: React.FC = () => {
 
     try {
       await leaveStudyGroup(accessToken, groupId);
-      const updatedGroups = await getJoinedStudyGroups(accessToken);
-      setStudyGroups(updatedGroups);
+      const allGroups = await getAllStudyGroupsWithStatus(accessToken);
+      const updatedMemberGroups = allGroups.filter(group => group.myRole === "MEMBER");
+      setStudyGroups(updatedMemberGroups);
       alert("스터디 그룹에서 탈퇴했습니다.");
     } catch (error) {
       setError("멤버 탈퇴에 실패했습니다.");
