@@ -5,7 +5,7 @@ import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import { getCreatedStudyGroups, getStudyGroupById, closeRecruitment } from "../../api/studyGroupApi.ts";
+import { getAllStudyGroupsWithStatus, getStudyGroupById, closeRecruitment } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { createGroupChatRoom } from "../../api/chatApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
@@ -46,8 +46,9 @@ export const LeaderStudyGroupPage: React.FC = () => {
       }
 
       try {
-        const createdGroups = await getCreatedStudyGroups(accessToken);
-        setStudyGroups(createdGroups);
+        const allGroups = await getAllStudyGroupsWithStatus(accessToken);
+        const leaderGroups = allGroups.filter(group => group.myRole === "LEADER");
+        setStudyGroups(leaderGroups);
       } catch (error) {
         setError("스터디 그룹을 조회할 수 없습니다.");
       }
