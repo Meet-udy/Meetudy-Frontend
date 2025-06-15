@@ -12,6 +12,7 @@ import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
 
 interface StudyGroupDetail {
+  id?: number | null;
   category: string;
   name: string;
   description: string;
@@ -27,7 +28,6 @@ export const LeaderStudyGroupPage: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<StudyGroupDetail | null>(null);
   const [memberModalOpen, setMemberModalOpen] = useState(false); 
   const [selectedGroupIdForMember, setSelectedGroupIdForMember] = useState<number | null>(null); 
-  const [closedGroups, setClosedGroups] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [createdChatRooms, setCreatedChatRooms] = useState<number[]>([]);
 
@@ -173,6 +173,7 @@ export const LeaderStudyGroupPage: React.FC = () => {
       {isModalOpen && selectedGroup && (
         <StudyGroupDetailModal 
           studyGroup={selectedGroup}
+          groupId={selectedGroup.id}
           onClose={handleCloseModal}
           sourcePage="LeaderStudyGroupPage"
         />

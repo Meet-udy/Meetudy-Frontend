@@ -2,7 +2,6 @@ import axios from "axios";
 import { API_BASE_URL, authHeader, ApiResponse } from "./apiUtils.ts";
 import { transformStudyGroupData, transformStudyGroupFromResult } from "../utils/studyGroupUtils.ts";
 
-
 export interface StudyGroupDto {
   id?: number | null;
   category: string;
@@ -14,6 +13,14 @@ export interface StudyGroupDto {
   maxParticipants: number;
   isRecruiting?: boolean;
   myRole?: string;
+}
+
+export interface StudyGroupUpdateDto {
+  name: string;
+  description: string;
+  maxParticipants: number;
+  location: string;
+  category: string;
 }
 
 export interface StudyGroupMemberDto {
@@ -69,17 +76,20 @@ export const createStudyGroup = async (
   }
 };
 
-export const getCreatedStudyGroups = async (
-  accessToken: string
-): Promise<StudyGroupDto[]> => {
+export const updateGroupInfo = async (
+  accessToken: string, 
+  groupId: number,
+  studyGroupUpdateDto: StudyGroupUpdateDto
+) => {
   try {
-    const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
-      `${API_BASE_URL}/study-groups/created-groups`, 
+    const response = await axios.patch<ApiResponse<string>>(
+      `${API_BASE_URL}/study-groups/${groupId}`,
+      studyGroupUpdateDto,
       authHeader(accessToken)
     );
-    return response.data.result!.map(transformStudyGroupData);
+    return response.data;
   } catch (error) {
-      throw new Error("스터디 그룹을 조회할 수 없습니다.");
+    throw new Error("스터디 그룹 정보 수정에 실패했습니다.");
   }
 };
 
