@@ -16,4 +16,4 @@ export const locationMapping: { [key: string]: string } = {
   ULSAN: "울산광역시",
   BUSAN: "부산광역시",
   OTHERS: "기타"
-};
+};   
