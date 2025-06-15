@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 interface StudyGroupDetailModalProps {
   studyGroup: {
@@ -10,7 +11,7 @@ interface StudyGroupDetailModalProps {
     location: string;
     maxParticipants: number;
   };
-  groupId?: number;
+  groupId?: number | null;
   onJoin?: (groupId: number) => void;
   onClose: () => void;
   onCreateQuestionChatRoom?: (groupId: number) => void;
@@ -26,6 +27,7 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
   sourcePage
 }) => {
 
+  const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
@@ -96,9 +98,9 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
             <ModalFooter>
               <FooterButton
                 onClick={() => {
-                  if (onCreateQuestionChatRoom && groupId !== undefined) {
+                  if (onCreateQuestionChatRoom && typeof groupId === 'number') {
                     onCreateQuestionChatRoom(groupId);
-                  }
+                  }                  
                 }}
               >
                 질문 채팅방 생성
@@ -106,7 +108,7 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
               
               <FooterButton
                 onClick={() => {
-                  if (onJoin && groupId !== undefined) {
+                  if (onJoin && typeof groupId === 'number') {
                     onJoin(groupId);
                   }   
                 }}
@@ -116,6 +118,20 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
             </ModalFooter>
           )}
 
+          {sourcePage === "LeaderStudyGroupPage" && (
+            <ModalFooter>
+              <FooterButton
+                onClick={() => {
+                  console.log(groupId);
+                  if (groupId !== undefined) {
+                    navigate(`/study-groups/edit/${groupId}`);
+                  }
+                }}
+              >
+                수정하기
+              </FooterButton>
+            </ModalFooter>
+          )}
         </ModalBody>
       </ModalContent>
     </ModalOverlay>
