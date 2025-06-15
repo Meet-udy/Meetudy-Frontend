@@ -103,3 +103,35 @@
 .cancel-btn:hover {
   background-color: #777;
 }
+
+.study-group-section {
+  margin-top: 40px; 
+}
+
+.study-group-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 70px;
+  margin-bottom: -25px;
+  color: #555;
+}
+
+.study-group-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.tag-box {
+  background-color: #55555518;
+  border: 1px solid #55555588;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  color: #777;
+  user-select: none;
+  white-space: nowrap;
+  margin-right: 10px;
+}
