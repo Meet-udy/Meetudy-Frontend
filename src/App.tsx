@@ -16,7 +16,7 @@ import PostListPage from "./pages/Community/PostListPage.tsx";
 import PostDetailPage from "./pages/Community/PostDetailPage.tsx";
 import MyPage from "./pages/Mypage/MyPage.tsx";
 import EditStudyGroupPage from "./pages/Study/EditStudyGroupPage.tsx";
-import { SearchResultPage } from "./pages/\bSearch/SearchResultPage.tsx";
+import { SearchResultPage } from "./pages/Search/SearchResultPage.tsx";
 
 function App() {
   return (
