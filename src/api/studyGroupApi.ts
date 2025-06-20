@@ -38,7 +38,7 @@ export const getSortedStudyGroups = async (
 ): Promise<StudyGroupDto[]> => {
   try {
     const response = await axios.get<ApiResponse<StudyGroupDto[]>>(
-      `${API_BASE_URL}/search/sort?sortBy=${sortBy}`, 
+      `${API_BASE_URL}/study-groups/sort?sortBy=${sortBy}`, 
       authHeader(accessToken)
     );
     return response.data.result!.map(transformStudyGroupData);
