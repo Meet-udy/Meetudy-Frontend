@@ -15,7 +15,7 @@ interface StudyGroupDetailModalProps {
   onJoin?: (groupId: number) => void;
   onClose: () => void;
   onCreateQuestionChatRoom?: (groupId: number) => void;
-  sourcePage: "StudyGroupPage" | "LeaderStudyGroupPage" | "MemberStudyGroupPage";
+  sourcePage: "StudyGroupPage" | "LeaderStudyGroupPage" | "MemberStudyGroupPage" | "StudyGroupSearchPage";
 }
 
 const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({

@@ -16,6 +16,7 @@ import PostListPage from "./pages/Community/PostListPage.tsx";
 import PostDetailPage from "./pages/Community/PostDetailPage.tsx";
 import MyPage from "./pages/Mypage/MyPage.tsx";
 import EditStudyGroupPage from "./pages/Study/EditStudyGroupPage.tsx";
+import { SearchResultPage } from "./pages/Search/SearchResultPage.tsx";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/posts/:postId" element={<PostDetailPage />} />
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/study-groups/edit/:groupId" element={<EditStudyGroupPage />} />
+          <Route path="/search" element={<SearchResultPage />} />
         </Routes>
       </div>
     </Router>
