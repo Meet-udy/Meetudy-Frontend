@@ -17,10 +17,12 @@ import PostDetailPage from "./pages/Community/PostDetailPage.tsx";
 import MyPage from "./pages/Mypage/MyPage.tsx";
 import EditStudyGroupPage from "./pages/Study/EditStudyGroupPage.tsx";
 import { SearchResultPage } from "./pages/Search/SearchResultPage.tsx";
+import CommentNotificationListener from "./components/notification/CommentNotificationListener.tsx";
 
 function App() {
   return (
     <Router>
+      <CommentNotificationListener />
       <div className="App">
         <Routes>
           <Route path="/" element={<HomePage />} />
