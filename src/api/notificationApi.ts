@@ -4,6 +4,8 @@ import { API_BASE_URL, authHeader, ApiResponse } from "./apiUtils.ts";
 export interface NotificationDto {
   notificationId: number;
   postId: number;
+  chatId: number;
+  chatRoomId: number;
   message: string;
   read: boolean;
   createdAt: string;
