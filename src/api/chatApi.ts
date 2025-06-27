@@ -115,3 +115,18 @@ export const getChatRoomByGroupId = async (
     throw new Error("채팅방 ID를 조회하는 데 실패했습니다.");
   }
 };
+
+export const fetchOtherMemberNicknames = async (
+  accessToken: string,
+  roomId: number
+): Promise<string[]> => {
+  try {
+    const response = await axios.get<ApiResponse<string[]>>(
+      `${API_BASE_URL}/chats/room/${roomId}/members`, 
+      authHeader(accessToken)
+    );
+    return response.data.result!;
+  } catch {
+    throw new Error("채팅방 참여자 닉네임을 조회하는 데 실패했습니다.");
+  }
+}
