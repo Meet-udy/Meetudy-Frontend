@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const CommentNotificationListener: React.FC = () => {
+const NotificationListener: React.FC = () => {
   useEffect(() => {
     const accessToken: string | null = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -37,6 +37,27 @@ const CommentNotificationListener: React.FC = () => {
       }
     });
 
+    eventSource.addEventListener("chat", (event: MessageEvent) => {
+      console.log("chat 이벤트를 수신했습니다.:", event.data);
+      try {
+        const notification = JSON.parse(event.data);
+        toast(`💬 새 채팅: ${notification.message}`, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: {
+            background: "#99999922",
+            color: "#555",
+          },
+        });
+      } catch (parseError) {
+        console.error("chat 이벤트 데이터 파싱 오류가 발생했습니다.:", parseError, event.data);
+      }
+    });    
+
     eventSource.onerror = (err) => {
       console.error("SSE 연결 중 오류가 발생했습니다.:", err);
       if (eventSource.readyState === EventSource.CLOSED) {
@@ -58,4 +79,4 @@ const CommentNotificationListener: React.FC = () => {
   );
 };
 
-export default CommentNotificationListener;
+export default NotificationListener;

@@ -23,7 +23,6 @@ export const Header: React.FC = () => {
 
   const toggleDropdown = () => setShowNotifications((prev) => !prev);
 
-  // 안 읽은 알림이 하나라도 있으면 true
   const hasUnread = notifications.some((n) => !n.read);
 
   return (
