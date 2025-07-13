@@ -89,8 +89,23 @@
   text-align: center;
 }
 
-.error {
-  color: red;
-  text-align: center;
-  margin-top: 16px;
+.floating-add-button {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #666666f2;
+  color: white;
+  font-size: 32px;
+  border: none;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.floating-add-button:hover {
+  background-color: #666;
 }
