@@ -14,6 +14,7 @@ import ChatRoomListPage from "./pages/Chat/ChatRoomListPage.tsx";
 import ChatRoomPage from "./pages/Chat/ChatRoomPage.tsx";
 import PostListPage from "./pages/Community/PostListPage.tsx";
 import PostDetailPage from "./pages/Community/PostDetailPage.tsx";
+import PostCreatePage from "./pages/Community/PostCreatePage.tsx";
 import MyPage from "./pages/Mypage/MyPage.tsx";
 import EditStudyGroupPage from "./pages/Study/EditStudyGroupPage.tsx";
 import { SearchResultPage } from "./pages/Search/SearchResultPage.tsx";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/chat/:roomId" element={<ChatRoomPage />} />
           <Route path="/community" element={<PostListPage/>} />
           <Route path="/posts/:postId" element={<PostDetailPage />} />
+          <Route path="/posts/create" element={<PostCreatePage />} />
           <Route path="/my-page" element={<MyPage />} />
           <Route path="/study-groups/edit/:groupId" element={<EditStudyGroupPage />} />
           <Route path="/search" element={<SearchResultPage />} />
