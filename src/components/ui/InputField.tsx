@@ -32,9 +32,9 @@ const StyledInput = styled.input`
   border: 1px solid #ddd;
   margin-bottom: 5px;
   width: 100%;
-  height: 20px;
+  height: auto;
 
   &.login-error { 
-    border-color: red;  // error 스타일 예시
+    border-color: red;
   }
 `;
