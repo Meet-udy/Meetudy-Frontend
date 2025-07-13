@@ -63,6 +63,9 @@ const PostListPage: React.FC = () => {
           ))}
         </ul>
       </div>
+      <button className="floating-add-button" onClick={() => navigate("/posts/create")}>
+        +
+      </button>
     </div>
   );
 };
