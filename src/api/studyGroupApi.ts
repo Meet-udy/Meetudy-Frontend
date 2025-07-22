@@ -178,19 +178,23 @@ export const rejectJoinRequest = async (
   }
 };
 
-export const closeRecruitment = async (
+export const updateRecruitmentStatus = async (
   accessToken: string,
-  groupId: number
+  groupId: number,
+  isRecruiting: boolean
 ): Promise<StudyGroupDto> => {
   try {
     const response = await axios.patch<ApiResponse<StudyGroupDto>>(
-      `${API_BASE_URL}/study-groups/${groupId}/closure`,
+      `${API_BASE_URL}/study-groups/${groupId}/recruitment`,
       null,
-      authHeader(accessToken)
+      {
+        ...authHeader(accessToken),
+        params: { isRecruiting },
+      }
     );
     return response.data.result!;
   } catch (error) {
-    throw new Error("스터디 멤버 모집 종료에 실패했습니다.");
+    throw new Error("스터디 그룹 모집 상태 변경에 실패했습니다.");
   }
 };
 
