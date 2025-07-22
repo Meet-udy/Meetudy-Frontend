@@ -48,11 +48,13 @@ export const getSortedStudyGroups = async (
 };
 
 export const getStudyGroupById = async (
+  accessToken: string,
   groupId: number
 ): Promise<StudyGroupDto> => {
   try {
     const response = await axios.get<ApiResponse<StudyGroupDto>>(
       `${API_BASE_URL}/study-groups/${groupId}`,
+      authHeader(accessToken)
     );
     return transformStudyGroupFromResult(response.data.result!);
   } catch(error) {
