@@ -18,6 +18,8 @@ interface StudyGroupDetail {
   isOnline: boolean;
   location: string;
   maxParticipants: number;
+  isRecruiting?: boolean;
+  myRole?: string;
 }
 
 export const StudyGroupPage: React.FC = () => {
@@ -46,7 +48,8 @@ export const StudyGroupPage: React.FC = () => {
 
       try {
         const sortedGroups = await getSortedStudyGroups(accessToken, sortBy);
-        setStudyGroups(sortedGroups);
+        const recruitingGroups = sortedGroups.filter(group => group.isRecruiting);
+        setStudyGroups(recruitingGroups);
       } catch (error) {
         setError("스터디 그룹을 조회할 수 없습니다.");
       }
@@ -56,13 +59,18 @@ export const StudyGroupPage: React.FC = () => {
   }, [accessToken, sortBy]);
 
   const handleCardClick = async (groupId: number) => {
+    if (!accessToken) {
+      setError("사용자 토큰이 필요합니다.");
+      return;
+    }
+
     if (groupId === null || groupId === undefined) {
       setError("잘못된 그룹 ID입니다.");
       return;
     }
 
     try {
-      const groupDetail = await getStudyGroupById(groupId);
+      const groupDetail = await getStudyGroupById(accessToken, groupId);
       setSelectedGroup(groupDetail);
       setIsModalOpen(true);
     } catch (error) {

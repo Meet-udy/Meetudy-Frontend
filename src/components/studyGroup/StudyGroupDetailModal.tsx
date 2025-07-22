@@ -10,6 +10,7 @@ interface StudyGroupDetailModalProps {
     duration: string;
     location: string;
     maxParticipants: number;
+    myRole?: string;
   };
   groupId?: number | null;
   onJoin?: (groupId: number) => void;
@@ -95,34 +96,39 @@ const StudyGroupDetailModal: React.FC<StudyGroupDetailModalProps> = ({
           </InfoBox>
 
           {sourcePage === "StudyGroupPage" && (
-            <ModalFooter>
-              <FooterButton
-                onClick={() => {
-                  if (onCreateQuestionChatRoom && typeof groupId === 'number') {
-                    onCreateQuestionChatRoom(groupId);
-                  }                  
-                }}
-              >
-                질문 채팅방 생성
-              </FooterButton>
-              
-              <FooterButton
-                onClick={() => {
-                  if (onJoin && typeof groupId === 'number') {
-                    onJoin(groupId);
-                  }   
-                }}
-              >
-                가입하기
-              </FooterButton>
-            </ModalFooter>
+            <>
+              <ModalFooter>
+                <FooterButton
+                  onClick={() => {
+                    if (onCreateQuestionChatRoom && typeof groupId === 'number') {
+                      onCreateQuestionChatRoom(groupId);
+                    }                  
+                  }}
+                >
+                  질문 채팅방 생성
+                </FooterButton>
+              </ModalFooter>
+
+              {studyGroup.myRole !== "LEADER" && studyGroup.myRole !== "MEMBER" && (
+                <ModalFooter>
+                  <FooterButton
+                    onClick={() => {
+                      if (onJoin && typeof groupId === 'number') {
+                        onJoin(groupId);
+                      }
+                    }}
+                  >
+                    가입하기
+                  </FooterButton>
+                </ModalFooter>
+              )}
+            </>
           )}
 
           {sourcePage === "LeaderStudyGroupPage" && (
             <ModalFooter>
               <FooterButton
                 onClick={() => {
-                  console.log(groupId);
                   if (groupId !== undefined) {
                     navigate(`/study-groups/edit/${groupId}`);
                   }
