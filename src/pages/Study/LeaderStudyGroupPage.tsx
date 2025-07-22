@@ -5,7 +5,7 @@ import StudyGroupSidebar from "../../components/layout/StudyGroupSidebar.tsx";
 import StudyGroupDetailModal from "../../components/studyGroup/StudyGroupDetailModal.tsx";
 import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.tsx";
 import { Header } from "../../components/layout/Header.tsx";
-import { getAllStudyGroupsWithStatus, getStudyGroupById, closeRecruitment } from "../../api/studyGroupApi.ts";
+import { getAllStudyGroupsWithStatus, getStudyGroupById, updateRecruitmentStatus } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
 import { createGroupChatRoom } from "../../api/chatApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
@@ -58,13 +58,18 @@ export const LeaderStudyGroupPage: React.FC = () => {
   }, [accessToken]);
 
   const handleInfoClick = async (groupId: number) => {
+    if (!accessToken) {
+      setError("사용자 토큰이 필요합니다.");
+      return;
+    }
+
     if (groupId === null || groupId === undefined) {
       setError("잘못된 그룹 ID입니다.");
       return;
     }
 
     try {
-      const groupDetail = await getStudyGroupById(groupId);
+      const groupDetail = await getStudyGroupById(accessToken, groupId);
       setSelectedGroup(groupDetail);
       setIsModalOpen(true);
     } catch (error) {
@@ -81,23 +86,23 @@ export const LeaderStudyGroupPage: React.FC = () => {
     if (!accessToken) return;
   
     try {
-      const updatedGroup = await closeRecruitment(accessToken, groupId);
+      const updatedGroup = await updateRecruitmentStatus(accessToken, groupId, false); 
       setStudyGroups(prev =>
         prev.map(group => (group.id === groupId ? updatedGroup : group))
       );
     } catch (error) {
-      alert("인원 모집 종료에 실패했습니다.");
+      setError("인원 모집 종료에 실패했습니다.");
     }
   };
 
   const handleCreateChatRoom = async (groupId: number) => {
-    if (typeof groupId !== "number") {
-      setError("잘못된 그룹 ID입니다.");
+    if (!accessToken) {
+      setError("사용자 토큰이 필요합니다.");
       return;
     }
 
-    if (!accessToken) {
-      alert("로그인 후 채팅방을 생성할 수 있습니다.");
+    if (typeof groupId !== "number") {
+      setError("잘못된 그룹 ID입니다.");
       return;
     }
 
@@ -113,9 +118,9 @@ export const LeaderStudyGroupPage: React.FC = () => {
       alert("채팅방이 생성되었습니다.");
     } catch (error: any) {
       if (error.response?.data?.code === "CHAT502") {
-        alert("그룹 멤버가 1명 이상 존재해야 채팅방을 생성할 수 있습니다.");
+        setError("그룹 멤버가 1명 이상 존재해야 채팅방을 생성할 수 있습니다.");
       } else {
-        alert("채팅방이 이미 생성되어 있습니다.");
+        setError("채팅방이 이미 생성되어 있습니다.");
       }
     }
   };
@@ -156,13 +161,35 @@ export const LeaderStudyGroupPage: React.FC = () => {
                 >
                   멤버 관리
                 </button>
-                {group.id != null && group.isRecruiting && (
-                  <button
-                    className="study-group-btn"
-                    onClick={() => handleCloseRecruitment(group.id!)}
-                  >
-                    인원 모집 완료
-                  </button>
+                {group.id != null && (
+                  group.isRecruiting ? (
+                    <button
+                      className="study-group-btn"
+                      onClick={() => handleCloseRecruitment(group.id!)}
+                    >
+                      스터디원 모집 완료
+                    </button>
+                  ) : (
+                    <button
+                      className="study-group-btn"
+                      onClick={async () => {
+                        if (!accessToken) {
+                          setError("사용자 토큰이 필요합니다.");
+                          return;
+                        }
+                        try {
+                          const updatedGroup = await updateRecruitmentStatus(accessToken, group.id!, true);
+                          setStudyGroups(prev =>
+                            prev.map(g => (g.id === group.id ? updatedGroup : g))
+                          );
+                        } catch {
+                          setError("스터디원 재모집에 실패했습니다.");
+                        }
+                      }}
+                    >
+                      스터디원 재모집
+                    </button>
+                  )
                 )}
               </div>
             </div>
