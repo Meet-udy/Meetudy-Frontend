@@ -59,9 +59,9 @@ export const updatePost = async (
   postId: number,
   accessToken: string,
   postRequestDto: PostRequestDto
-): Promise<string> => {
+): Promise<PostDetailDto> => {
   try {
-    const response = await axios.patch<ApiResponse<string>>(
+    const response = await axios.patch<ApiResponse<PostDetailDto>>(
       `${API_BASE_URL}/posts/${postId}`, 
       postRequestDto, 
       authHeader(accessToken)
