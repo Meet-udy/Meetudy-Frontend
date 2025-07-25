@@ -7,7 +7,7 @@ import StudyGroupMemberModal from "../../components/studyGroup/StudyMemberModal.
 import { Header } from "../../components/layout/Header.tsx";
 import { getAllStudyGroupsWithStatus, getStudyGroupById, updateRecruitmentStatus } from "../../api/studyGroupApi.ts";
 import { StudyGroupDto } from "../../api/studyGroupApi.ts";
-import { createGroupChatRoom } from "../../api/chatApi.ts";
+import { createGroupChatRoom, getCreatedChatRoomIds } from "../../api/chatApi.ts";
 import { useModal } from "../../hooks/useModal.ts";
 import "./StudyGroupPage.css";
 
@@ -34,11 +34,6 @@ export const LeaderStudyGroupPage: React.FC = () => {
   const accessToken: string | null = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    const storedChatRooms = JSON.parse(localStorage.getItem("createdChatRooms") || "[]");
-    if (Array.isArray(storedChatRooms)) {
-      setCreatedChatRooms(storedChatRooms);
-    }
-
     const fetchStudyGroups = async () => {
       if (!accessToken) {
         setError("사용자 토큰이 필요합니다.");
@@ -46,14 +41,19 @@ export const LeaderStudyGroupPage: React.FC = () => {
       }
 
       try {
-        const allGroups = await getAllStudyGroupsWithStatus(accessToken);
+        const [allGroups, createdRoomIds] = await Promise.all([
+          getAllStudyGroupsWithStatus(accessToken),
+          getCreatedChatRoomIds(accessToken),
+        ]);
+  
         const leaderGroups = allGroups.filter(group => group.myRole === "LEADER");
         setStudyGroups(leaderGroups);
+        setCreatedChatRooms(createdRoomIds); 
       } catch (error) {
-        setError("스터디 그룹을 조회할 수 없습니다.");
+        setError("스터디 그룹 정보를 불러오는 데 실패했습니다.");
       }
     };
-
+  
     fetchStudyGroups();
   }, [accessToken]);
 
