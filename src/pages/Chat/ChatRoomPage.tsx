@@ -60,27 +60,35 @@ const ChatRoomPage: React.FC = () => {
     
   const connect = () => {
     const socket = new SockJS(`http://localhost:8080/ws-stomp?token=${accessToken}`);
-    
+  
     stompClient = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
         stompClient?.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-          const received = JSON.parse(message.body) as ChatResponseDto;            
+          const received = JSON.parse(message.body) as ChatResponseDto;
           const isMine = received.senderId === currentMemberId;
-
+  
           const adjustedMessage = {
             ...received,
             mine: isMine,
           };
-
+  
           setMessages((prev) => [...prev, adjustedMessage]);
+        });
+  
+        stompClient?.subscribe(`/sub/chat/room/${roomId}/members`, (message) => {
+          const newNickname = message.body;
+
+          setOtherMemberNicknames((prev) =>
+            prev.includes(newNickname) ? prev : [...prev, newNickname]
+          );
         });
       },
       onStompError: (error) => {
         console.error('STOMP error', error);
       },
     });
-
+  
     stompClient.activate();
   };
   
