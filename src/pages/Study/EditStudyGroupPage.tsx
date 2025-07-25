@@ -33,12 +33,18 @@ const EditStudyGroupPage = () => {
 
   const [errors, setErrors] = useState<any>({});
   const { isModalOpen, setIsModalOpen, modalMessage, setModalMessage, handleCloseModal, handleGoHome, handleGoStudyGroup } = useModal();
+  const accessToken: string | null = localStorage.getItem("accessToken");
 
   useEffect(() => {
     const fetchStudyGroup = async () => {
+      if (!accessToken) {
+        setErrors("사용자 토큰이 필요합니다.");
+        return;
+      }
+
       try {
         if (!groupId) return;
-        const data = await getStudyGroupById(Number(groupId));
+        const data = await getStudyGroupById(accessToken, Number(groupId));
         setFormData({
           ...data,
           isOnline: data.location === "online",
