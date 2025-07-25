@@ -129,4 +129,18 @@ export const fetchOtherMemberNicknames = async (
   } catch {
     throw new Error("채팅방 참여자 닉네임을 조회하는 데 실패했습니다.");
   }
-}
+};
+
+export const getCreatedChatRoomIds = async (
+  accessToken: string
+): Promise<number[]> => {
+  try {
+    const response = await axios.get<ApiResponse<number[]>>(
+      `${API_BASE_URL}/chats/created-rooms`,
+      authHeader(accessToken)
+    );
+    return response.data.result!;
+  } catch (error) {
+    throw new Error("생성된 채팅방 데이터를 조회하는 데 실패했습니다.");
+  }
+};
